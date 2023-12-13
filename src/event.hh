@@ -65,6 +65,7 @@ class EventQueue
 		Event* pop();
 		Time nextEventTime();
 		void show();
+		uint32_t size();
 };
 
 #endif

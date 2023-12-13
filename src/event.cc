@@ -20,7 +20,7 @@ Event::present() {
 
 	std::string job_list = "";
 	for(auto j: jobList)
-		job_list += std::to_string(j->id) + ", ";
+		job_list += std::to_string(j->id) + " " + j->getServName() + ", ";
 	job_list = job_list.substr(0, job_list.size());
 
 	if(type == EventType::JOB_RECV) 
@@ -123,7 +123,18 @@ EventQueue::nextEventTime() {
 
 void
 EventQueue::show() {
+	std::cout << "Event Queue: " << std::endl;
+	std::unordered_map<std::string, unsigned> freq_map;
 	for(unsigned i = 0; i < numEvents; ++i)
-		std::cout << queue[i]->present() << std::endl;
+		for(auto j: queue[i]->jobList)	
+			freq_map[j->getServName()] += 1;
+	for (auto it = freq_map.begin(); it != freq_map.end(); ++it)
+		std::cout << it->first << " " << it->second << std::endl;
+		//std::cout << queue[i]->present() << std::endl;
 	// std::cout << std::endl;
+}
+
+uint32_t
+EventQueue::size() {
+	return queue.size();
 }
