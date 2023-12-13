@@ -153,123 +153,27 @@ Client::run(Time time) {
 	}
 	
 	curTime = time;
-
-	// // rapl control logic
-	// if(curTime - lastMonitorTime >= monitorInterval) {
-
-	// 	Time tail_lat = respTimeRecords->getTailLat();
-
-	// 	// for(unsigned i = 0; i < count; ++i) {
-	// 	// 	if(!complete[i] && (curTime - startTime[i]) >= targTailLat)
-	// 	// 		respTimeRecords->jobCompl(curTime - startTime[i]);
-	// 	// }
-
-	// 	// double tail_lat_all = respTimeRecords->getTailLat();
-	// 	respTimeRecords->clear();
-
-	// 	// rapl report
-	// 	std::cout << std::endl << "99% tail (job complete) lat within [" << (double)lastMonitorTime/1000000000.0 << "s, " <<
-	// 		(double)curTime/1000000000.0 << "s) = " << (double)tail_lat/1000000.0 <<  ' ms' << std::endl;
-
-	// 	// std::cout << "99% tail (job complete & issued in-complete) lat within [" << lastMonitorTime << ", " <<
-	// 	// 	curTime << ") = " << tail_lat_all << std::endl;
-
-	// 	// use all timing info to make decision
-	// 	// tail_lat = tail_lat_all;
-
-	// 	// update timer
-	// 	lastMonitorTime = curTime;
-
-	// 	// no job completed in this period, do nothing
-	// 	// must be done after timer is updated
-	// 	if(tail_lat < 0)
-	// 		return;
-	// 	double rapl_event_time = curTime + netLat;
-	// 	if(tail_lat >= targTailLat) {
-	// 		// simple fall back path
-	// 		if(fallbackPolicy == RaplFallbackPolicy::IMMEDIATE) {
-	// 			// increase to full freq
-	// 			if(memcachedFreq != 2600)
-	// 				entry->incServFreqFull(rapl_event_time, "memcached");
-	// 			if(ngxFreq != 2600)
-	// 				entry->incServFreqFull(rapl_event_time, "nginx");
-	// 			memcachedFreq = 2600;
-	// 			ngxFreq = 2600;
-	// 		} else if(fallbackPolicy == RaplFallbackPolicy::GRADUAL) {
-	// 			// increase gradually
-	// 			if(memcachedFreq != 2600) {
-	// 				entry->incServFreq(rapl_event_time, "memcached");
-	// 				memcachedFreq += 200;
-	// 			}
-	// 			if(ngxFreq != 2600) {
-	// 				entry->incServFreq(rapl_event_time, "nginx");
-	// 				ngxFreq += 200;
-	// 			}
-	// 		}
-			
-	// 	} else if((targTailLat - tail_lat)/targTailLat <= 200) {
-	// 		// stop decreasing freq
-	// 		return;
-	// 	} else {
-	// 		// decrease freq
-	// 		if(policy == RaplPolicy::MEMCACHED_FIRST) {
-	// 			if(memcachedFreq > 1200) {
-	// 				entry->decServFreq(rapl_event_time, "memcached");
-	// 				memcachedFreq -= 200;
-	// 			} else if(ngxFreq > 1200) {
-	// 				entry->decServFreq(rapl_event_time, "nginx");
-	// 				ngxFreq -= 200;
-	// 			}
-	// 		} else if(policy == RaplPolicy::NGX_FIRST) {
-	// 			if(ngxFreq > 1200) {
-	// 				entry->decServFreq(rapl_event_time, "nginx");
-	// 				ngxFreq -= 200;
-	// 			} else if(memcachedFreq > 1200) {
-	// 				entry->decServFreq(rapl_event_time, "memcached");
-	// 				memcachedFreq -= 200;
-	// 			}
-	// 		} else if(policy == RaplPolicy::LOCKSTEP) {
-	// 			if(ngxFreq > 1200) {
-	// 				entry->decServFreq(rapl_event_time, "nginx");
-	// 				ngxFreq -= 200;
-	// 			} 
-	// 			if(memcachedFreq > 1200) {
-	// 				entry->decServFreq(rapl_event_time, "memcached");
-	// 				memcachedFreq -= 200;
-	// 			}
-	// 		}
-	// 	}
-	// }
-	// // rapl control logic ends
 }
 
 void
 Client::show() {
-	if(debug) {
-		// double* table = new double[numTotal];
-		// for(unsigned i = 0; i < numTotal; ++i) 
-		// 	table[i] = finalTime[i] - startTime[i];
-		// // std::cout << "before qsort" << std::endl;
-		// qsort(table, numTotal, sizeof(double), compareDouble);
-		// for(unsigned i = 0; i < numTotal; ++i)
-		// 	printf("%.20f\n", table[i]);
-		// 	// std::cout << table[i] << std::endl;
-		// delete[] table;
-		return;
-	} else {
-		// for(unsigned i = 0; i < numTotal; ++i)
-		// 	printf("%.20f\n", finalTime[i] - startTime[i]);
-			// std::cout << finalTime[i] - startTime[i] << std::endl;
-
-		// only show events after next epoch event
-		Time tail_lat = respTimeRecords->getTailLat();
-		std::cout << "99% tail lat within [" << (double)lastMonitorTime/1000000000.0 << "s, sim_end) = " << (double)tail_lat/1000000.0
-			<< "ms" << std::endl; 
-
-		Time avg_lat = respTimeRecords->getAvgLat();
+	Time avg_lat = respTimeRecords->getAvgLat();
+	Time tail_lat_95 = respTimeRecords->getPercentileLat(0.95);
+	Time tail_lat_99 = respTimeRecords->getPercentileLat(0.99);
+	if (debug) {
+		std::vector<uint64_t> latencies = respTimeRecords->getAllLat();
+		std::cout << "***begin latencies***" << std::endl;
+		for (Time lat: latencies)
+			std::cout << (double)lat/1000000.0 << std::endl;
+		std::cout << "***end latencies***" << std::endl;
 		std::cout << "average lat within [" << (double)lastMonitorTime/1000000000.0 << "s, sim_end) = " << (double)avg_lat/1000000.0
 			<< "ms" << std::endl; 
+		std::cout << "95% tail lat within [" << (double)lastMonitorTime/1000000000.0 << "s, sim_end) = " << (double)tail_lat_95/1000000.0
+			<< "ms" << std::endl; 
+		std::cout << "99% tail lat within [" << (double)lastMonitorTime/1000000000.0 << "s, sim_end) = " << (double)tail_lat_99/1000000.0
+			<< "ms" << std::endl;
 	}
+	std::cout << (double)avg_lat/1000000.0 << ";" << (double)tail_lat_95/1000000.0 << ";" << (double)tail_lat_99/1000000.0 << std::endl;
 }
 
 void
@@ -295,7 +199,6 @@ Client::setTimeArray() {
 		assert(tm != nullptr);
 		tm->reset(new_lat);
 	} else {
-		Time lastTime = 0;
 		finalTime = new Time[numTotal];
 		startTime = new Time[numTotal];
 		complete = new bool[numTotal];
@@ -306,7 +209,7 @@ Client::setTimeArray() {
 
 Time
 Client::getTailLat() {
-	return respTimeRecords->getTailLat();
+	return respTimeRecords->getPercentileLat(0.99);
 }
 
 void

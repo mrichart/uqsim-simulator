@@ -352,12 +352,17 @@ MicroService::getCpuUtil(Time elapsed_time) {
 }
 
 Time
-MicroService::getTailLat() {
+MicroService::getPercentileLat(double percentile) {
 	if(resp_time.empty())
 		return INVALID_TIME;
 	std::sort(resp_time.begin(), resp_time.end());
-	return resp_time[unsigned(0.99 * resp_time.size())];
+	return resp_time[unsigned(percentile * resp_time.size())];
 	// resp_time.clear();
+}
+
+uint64_t
+MicroService::getTxRequests(){
+	return resp_time.size();
 }
 
 void

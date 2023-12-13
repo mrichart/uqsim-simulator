@@ -61,6 +61,7 @@ class Cluster
 
 		void showCpuUtil(Time time);
 		void getPerTierTail(std::unordered_map<std::string, Time>& lat_info);
+		void showStats(Time time);
 };
 
 #endif

@@ -102,8 +102,9 @@ class MicroService
 		virtual bool jobLeft();
 
 		double getCpuUtil(Time elapsed_time);
-		Time getTailLat();
+		Time getPercentileLat(double percentile);
 		void clearRespTime();
+		uint64_t getTxRequests();
 
 		void setFreq(unsigned freq);
 

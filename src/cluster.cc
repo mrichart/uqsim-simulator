@@ -261,9 +261,23 @@ Cluster::showCpuUtil(Time time) {
 void
 Cluster::getPerTierTail(std::unordered_map<std::string, Time>& lat_info) {
 	for(MicroService* serv: services) {
-		Time lat = serv->getTailLat();
+		Time lat = serv->getPercentileLat(0.99);
 		serv->clearRespTime();
 		lat_info[serv->getName()] = lat;
+	}
+}
+
+void
+Cluster::showStats(Time time) {
+	for(MicroService* serv: services) {
+		//if (serv->getName().find("net_stack") != std::string::npos)
+		//	continue;
+		double util = serv->getCpuUtil(time);
+		uint64_t tx = serv->getTxRequests();
+		std::cout << serv->getName() << ":"<< util << ";" << tx/(time/1000000000.0) << ";" << serv->getPercentileLat(0.2)/1000000.0 << ";"
+		 << serv->getPercentileLat(0.3)/1000000.0 << ";" << serv->getPercentileLat(0.5)/1000000.0 << ";" 
+		 << serv->getPercentileLat(0.95)/1000000.0 << ";" << serv->getPercentileLat(0.99)/1000000.0 << ";" << std::endl;
+		serv->clearRespTime();
 	}
 }
 

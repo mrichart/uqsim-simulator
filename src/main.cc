@@ -36,19 +36,25 @@ bool get_sched_decision(int cur_round, std::unordered_map<std::string, unsigned>
 	}
 }
 
-void output_stats(int cur_round, Time end2end_tail, Time ngx_tail, Time memc_tail, uint64_t cur_qps) {
+void output_stats(Time end2end_tail, std::unordered_map<std::string, Time> lat_info, uint64_t cur_qps) {
 	std::ofstream stats_file(stats_output_file);
 	if(!stats_file) {
 		std::cout << "cannot open " << sched_dec_file << std::endl;
 		exit(-1);
 	}
 
-	std::cout << "output stats" << std::endl;
-	stats_file << "end2end: " << end2end_tail << "; nginx: " << ngx_tail 
-		<< "; memcached :" << memc_tail << "; cur_qps: " << cur_qps  << "; cur_round: " << cur_round << std::endl;
-	stats_file.close();
-	std::cout << "end2end: " << end2end_tail << "; nginx: " << ngx_tail 
-		<< "; memcached :" << memc_tail << "; cur_qps: " << cur_qps  << "; cur_round: " << cur_round << std::endl;
+	stats_file << "cur_qps: " << cur_qps << std::endl;
+	std::cout << "cur_qps: " << cur_qps << std::endl;
+
+	stats_file << "end2end: " << end2end_tail/1000000.0 << std::endl;
+	std::cout << "end2end: " << end2end_tail/1000000.0 << std::endl;
+
+	for (auto it = lat_info.begin(); it != lat_info.end(); ++it) {
+		stats_file << it->first << ": " << it->second/1000000.0 << "; ";
+		std::cout << it->first << ": " << it->second/1000000.0 << "; ";
+	}
+	stats_file << std::endl;
+	std::cout << std::endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -141,12 +147,13 @@ int main(int argc, char* argv[]) {
 			break;
 		}
 
-		if(debug) {
+		if(debug) {			
+			printf("globalTime = %f ms\n", globalTime/1000000.0);
 			printf("nextClient = %f ms\n", nextClient/1000000.0);
 			printf("nextCluster = %f ms\n", nextCluster/1000000.0);
 		}
 
-		if(nextClient == INVALID_TIME && nextCluster == INVALID_TIME)
+		if(nextClient == INVALID_TIME)
 			break;
 		else if(nextCluster == INVALID_TIME) {
 			// std::cout << "cluster invalid time" << std::endl;
@@ -156,8 +163,8 @@ int main(int argc, char* argv[]) {
 			assert(globalTime <= nextClient);
 			globalTime = nextClient;
 
-			if(client->needSched(globalTime)) {
-				std::cout << "client make decision at " << nextClient/1000000000.0 << "s, cur_round = "
+ 			if(client->needSched(globalTime)) {
+				std::cout << "monitor time " << nextClient/1000000000.0 << "s, cur_round = "
 						<< cur_round << std::endl;
 
 				std::unordered_map<std::string, Time> lat_info;
@@ -165,15 +172,8 @@ int main(int argc, char* argv[]) {
 				Time end2end_tail = client->getTailLat();
 				client->clearRespTime();
 				uint64_t cur_qps = client->getCurQps();
-				output_stats(cur_round, end2end_tail, lat_info["nginx"], lat_info["memcached"], cur_qps);
-
-				std::unordered_map<std::string, unsigned> freq_set;
-				while(!get_sched_decision(cur_round, freq_set));
+				output_stats(end2end_tail, lat_info, cur_qps);
 				cur_round += 1;
-				std::cout << "decision made nginx = " << freq_set["nginx"] << 
-					", memcached = " << freq_set["memcached"] << std::endl << std::endl; 
-				cluster->setFreq("nginx", freq_set["nginx"]);
-				cluster->setFreq("memcached", freq_set["memcached"]);
 				client->setLastMonitorTime(globalTime);
 			}
 			
@@ -188,7 +188,7 @@ int main(int argc, char* argv[]) {
 			globalTime = nextCluster;
 
 			if(client->needSched(globalTime)) {
-				std::cout << "client make decision at " << nextClient/1000000000.0 << "s, cur_round = "
+				std::cout << "monitor time " << nextCluster/1000000000.0 << "s, cur_round = "
 						<< cur_round << std::endl;
 
 				std::unordered_map<std::string, Time> lat_info;
@@ -196,15 +196,8 @@ int main(int argc, char* argv[]) {
 				Time end2end_tail = client->getTailLat();
 				client->clearRespTime();
 				uint64_t cur_qps = client->getCurQps();
-				output_stats(cur_round, end2end_tail, lat_info["nginx"], lat_info["memcached"], cur_qps);
-
-				std::unordered_map<std::string, unsigned> freq_set;
-				while(!get_sched_decision(cur_round, freq_set));
+				output_stats(end2end_tail, lat_info, cur_qps);
 				cur_round += 1;
-				std::cout << "decision made nginx = " << freq_set["nginx"] << 
-					", memcached = " << freq_set["memcached"] << std::endl << std::endl; 
-				cluster->setFreq("nginx", freq_set["nginx"]);
-				cluster->setFreq("memcached", freq_set["memcached"]);
 				client->setLastMonitorTime(globalTime);
 			}
 			
@@ -219,23 +212,16 @@ int main(int argc, char* argv[]) {
 				globalTime = nextClient;
 				// check if needs scheduling
 				if(client->needSched(globalTime)) {
-					std::cout << "client make decision at " << nextClient/1000000000.0 << "s, cur_round = "
-						<< cur_round << std::endl;
+					std::cout << "monitor time " << nextClient/1000000000.0 << "s, cur_round = "
+							<< cur_round << std::endl;
 
 					std::unordered_map<std::string, Time> lat_info;
 					cluster->getPerTierTail(lat_info);
 					Time end2end_tail = client->getTailLat();
 					client->clearRespTime();
 					uint64_t cur_qps = client->getCurQps();
-					output_stats(cur_round, end2end_tail, lat_info["nginx"], lat_info["memcached"], cur_qps);
-
-					std::unordered_map<std::string, unsigned> freq_set;
-					while(!get_sched_decision(cur_round, freq_set));
+					output_stats(end2end_tail, lat_info, cur_qps);
 					cur_round += 1;
-					std::cout << "decision made nginx = " << freq_set["nginx"] << 
-						", memcached = " << freq_set["memcached"] << std::endl << std::endl; 
-					cluster->setFreq("nginx", freq_set["nginx"]);
-					cluster->setFreq("memcached", freq_set["memcached"]);
 					client->setLastMonitorTime(globalTime);
 				}
 				// std::cout << "before client run" << std::endl;
@@ -254,8 +240,10 @@ int main(int argc, char* argv[]) {
 	bool deadlock = cluster->jobLeft();
 	assert(!deadlock);
 
+	std::cout << "Simulation ended at time " << globalTime/1000000000.0 << "s" << std::endl;
 	client->show();
-	cluster->showCpuUtil(globalTime);
+	//cluster->showCpuUtil(globalTime);
+	cluster->showStats(globalTime);
 
 	delete client;
 	delete cluster;

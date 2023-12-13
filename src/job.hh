@@ -29,9 +29,9 @@ class JobTimeRecords
 
 		// add 
 		void jobCompl(Time time);
-		// return 99% tail latency
-		Time getTailLat();
+		Time getPercentileLat(double percentil);
 		Time getAvgLat();
+		std::vector<uint64_t> getAllLat();
 
 		void clear();
 };

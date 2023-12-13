@@ -17,11 +17,11 @@ JobTimeRecords::jobCompl(Time time) {
 }
 
 Time
-JobTimeRecords::getTailLat() {
+JobTimeRecords::getPercentileLat(double percentile) {
 	if(jobComplTime.size() == 0)
 		return INVALID_TIME;
 	std::sort(jobComplTime.begin(), jobComplTime.end());
-	unsigned pos = unsigned(0.99 *jobComplTime.size());
+	unsigned pos = unsigned(percentile *jobComplTime.size());
 	return jobComplTime[pos]; 
 }
 
@@ -34,6 +34,12 @@ JobTimeRecords::getAvgLat() {
 		total += lat;
 
 	return total/jobComplTime.size();
+}
+
+std::vector<uint64_t> 
+JobTimeRecords::getAllLat() {
+
+	return jobComplTime;
 }
 
 void
