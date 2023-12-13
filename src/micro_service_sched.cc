@@ -407,8 +407,9 @@ SimpScheduler::schedule(Time globalTime, std::list<Event*>& eventList) {
 		// std::cout << "numStages = " << paths[pid].numStages << std::endl;
 		for(unsigned i = 0 ; i < paths[pid].numStages; ++i) {
 			// std::cout << "i = " << i << std::endl;
-			paths[pid].stages[i]->run(execTime, j, INVALID_TIME);
+			Time proc_time = paths[pid].stages[i]->run(execTime, j, INVALID_TIME);
 			execTime = j->time;
+		    core->total_time += proc_time;
 		}
 
 		// std::cout << "one stage, j queue + proc time = " << j->time - enqueTime << std::endl;
