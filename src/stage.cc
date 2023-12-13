@@ -298,7 +298,7 @@ Stage::run(Time globalTime, Job* j, Time proc_time) {
 		assert(j->getStage() == pathStageId);
 	}
 
-	unsigned connId = j->connId;
+	//unsigned connId = j->connId;
 
 	// if(!connStates[j->connId].valid) {
 	// 	connStates[j->connId].connId  = connId;
