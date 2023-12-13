@@ -447,10 +447,10 @@ NetStack::NetStack(unsigned id, const std::string& instName, const std::string& 
 }
 
 void
-NetStack::addConn(unsigned serv_id, NetStack* net_serv) {
+NetStack::addConn(unsigned serv_id, NetStack* net_serv, Time netLat) {
 	// std::cout << "conn serv_id = " << serv_id << " added" << std::endl;
 	// assert(connections.find(serv_id) == connections.end());
-	connections[serv_id] = net_serv;
+	connections[serv_id] = std::pair<NetStack*, Time>(net_serv, netLat);
 }
 
 void
@@ -640,10 +640,11 @@ NetStack::send(Job* j) {
 			(*itr).second->enqueue(j);
 		else {
 			// std::cout << "targServId = " << j->targServId << std::endl;
-			j->time += netLat;
+			
 			auto itrc = connections.find(j->targServId);
 			assert(itrc != connections.end());
-			(*itrc).second->enqueue(j);
+			j->time += (*itrc).second.second;
+			(*itrc).second.first->enqueue(j);
 		}
 	} else {
 		if(debug)

@@ -26,7 +26,7 @@ class Machine
 		NetStack* netStack;
 		std::vector<MicroService*> services;
 		bool debug;
-		std::set<unsigned> connectedMachines;
+		std::vector<std::pair<Machine*, Time>> connectedMachines;
 
 	public:
 		ClientRx* dummyClient;
@@ -45,7 +45,8 @@ class Machine
 		void addService(MicroService* serv);
 		std::vector<MicroService*> getServices();
 
-		void addConn(Machine* mac);
+		void addConn(Machine* mac, Time lat);
+		void setupConnections();
 
 		Core* getCore(unsigned cid);
 };

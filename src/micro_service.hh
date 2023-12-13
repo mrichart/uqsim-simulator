@@ -121,7 +121,7 @@ class NetStack: public MicroService
 	protected:
 		// maps each microservice service instance id to the tcp instance 
 		// of the machine on which it's deployed
-		std::unordered_map<unsigned, NetStack*> connections;
+		std::unordered_map<unsigned, std::pair<NetStack*, Time>> connections;
 		// micro-services that are on the same service as this tcp
 		std::unordered_map<unsigned, MicroService*> localServ;
 
@@ -133,7 +133,7 @@ class NetStack: public MicroService
 		NetStack(unsigned id, const std::string& instName, const std::string& servName,
 			 const std::string& servDomain, bool debug, EventQueue* eq);
 		~NetStack() {}
-		void addConn(unsigned serv_id, NetStack* tcp);	
+		void addConn(unsigned serv_id, NetStack* tcp, Time netLat);	
 		void setLocalServ(std::unordered_map<unsigned, MicroService*> local_serv);
 		void addLocalServ(MicroService* serv);
 		void setNetLat(Time lat);

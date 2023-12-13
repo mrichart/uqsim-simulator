@@ -97,20 +97,17 @@ Cluster::setNetLat(Time lat) {
 }
 
 void
+Cluster::addMachinesLink(unsigned mid1, unsigned mid2, unsigned cap, Time lat) {
+	Machine* mac1 = getMachine(mid1);
+	Machine* mac2 = getMachine(mid2);
+	mac1->addConn(mac2, lat);
+	mac2->addConn(mac1, lat);
+}
+
+void
 Cluster::setupConn() {
-	unsigned i = 0;
-	for(auto p1: machineMap) {
-		Machine* m1 = p1.second;
-		for(auto p2: machineMap) {
-			Machine* m2 = p2.second;
-			if(m1->getId() != m2->getId())	{
-				m1->addConn(m2);
-				m2->addConn(m1);
-			}
-		}
-		i += 1;
-		// if(i > machineMap.size()/2)
-		// 	break;
+	for(auto it: machineMap) {
+		it.second->setupConnections();
 	}
 }
 

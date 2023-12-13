@@ -374,9 +374,12 @@ ClusterParser::parsCluster() {
 	struct stat pathStat;
 	if(stat(machFname.c_str(), &pathStat) == 0 && S_ISREG(pathStat.st_mode) != 0) {
 		Json::CharReaderBuilder reader;
-		Json::Value machines;
+		Json::Value machinesGraph;
 		std::ifstream mf(machFname);
-		Json::parseFromStream(reader, mf, &machines, nullptr);
+		Json::parseFromStream(reader, mf, &machinesGraph, nullptr);
+
+		//machines description
+		Json::Value& machines = machinesGraph["machines"];
 		for(unsigned i = 0; i < machines.size(); ++i) {
 			Json::Value& machine = machines[i];
 			assert(machine.isMember("machine_id"));
@@ -472,6 +475,24 @@ ClusterParser::parsCluster() {
 			cluster->addService( dynamic_cast<MicroService*> (net));
 
 			// std::cout << "done net" << std::endl;
+		}
+
+		//links between machines
+		Json::Value& links = machinesGraph["links"];
+		for(unsigned i = 0; i < links.size(); ++i) {
+			Json::Value& link = links[i];
+			
+			assert(link.isMember("machine_id_1"));
+			assert(link.isMember("machine_id_2"));
+			assert(link.isMember("capacity"));
+			assert(link.isMember("latency"));
+
+			unsigned mid1 = link["machine_id_1"].asUInt();
+			unsigned mid2 = link["machine_id_2"].asUInt();
+			unsigned cap = link["capacity"].asUInt();
+			Time lat = link["latency"].asUInt();
+
+			cluster->addMachinesLink(mid1, mid2, cap, lat);
 		}
 
 		std::cout << "done machines.json" << std::endl;
@@ -659,7 +680,7 @@ ClusterParser::parsCluster() {
 
 		std::cout << "done edges" << std::endl;
 
-		// set up connections among machines
+		// set up connections among microservices deployed on machines
 		cluster->setupConn();
 	} else {
 		printf("Error: Missing graph.json\n");

@@ -43,6 +43,7 @@ class Cluster
 		void addMachine(Machine* mac);
 		Machine* getMachine(unsigned mid);
 		void setNetLat(Time lat);
+		void addMachinesLink(unsigned mid1, unsigned mid2, unsigned cap, Time lat);
 		void setupConn();
 
 		void enqueue(Job* j);

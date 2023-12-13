@@ -80,13 +80,18 @@ Machine::getServices() {
 
 // TODO: more flexbile implementation for service discovery which enables service transfer
 void
-Machine::addConn(Machine* mac) {
-	if(connectedMachines.find(mac->getId()) == connectedMachines.end())
-		connectedMachines.insert(mac->getId());
-	else
-		return;
-	for(auto serv: mac->getServices()) 
-		netStack->addConn(serv->getId(), mac->getNet());
+Machine::addConn(Machine* mac, Time lat) {
+	connectedMachines.push_back(std::pair<Machine*, Time>(mac, lat));
+}
+
+void
+Machine::setupConnections() {
+	for(auto it: connectedMachines) {
+		Machine* mac = it.first;
+		for(auto serv: mac->getServices()) {
+			netStack->addConn(serv->getId(), mac->getNet(), it.second);
+		}
+	}
 }
 
 Core*
