@@ -21,9 +21,9 @@ class ClusterParser
 		// directory that contains cluster configuration
 		std::string clusterDir;
 		unsigned servId;
+		double kqps;
 		bool debug;
 		EventQueue* eq;
-		double kqps;
 
 	public:
 		ClusterParser(const std::string& cluster_dir, double kqps, bool debug);
