@@ -22,10 +22,10 @@ ClusterParser::ClusterParser(const std::string& cluster_dir, double kqps, bool d
 	// have a single json file microservice.json in cluster arch directory
 	if(stat(servArchFile.c_str(), &path_stat) == 0 && S_ISREG(path_stat.st_mode) != 0) {
 		// micro-service spec file exists and it's a file
-		Json::Reader reader;
+		Json::CharReaderBuilder reader;
 		Json::Value services;
 		std::ifstream sf(servArchFile);
-		reader.parse(sf, services);
+		Json::parseFromStream(reader, sf, &services, nullptr);
 		for(unsigned i = 0; i < services.size(); ++i) {
 			assert(services[i].isMember("service_name"));
 			std::string servName = services[i]["service_name"].asString();
@@ -49,10 +49,10 @@ ClusterParser::ClusterParser(const std::string& cluster_dir, double kqps, bool d
 			std::string fname = std::string(entry->d_name);
 			if(fname.find(".json") != std::string::npos) {
 				std::string path = servArchDir + "/" + fname;
-				Json::Reader reader;
+				Json::CharReaderBuilder reader;
 				Json::Value service;
 				std::ifstream sf(path);
-				reader.parse(sf, service);
+				Json::parseFromStream(reader, sf, &service, nullptr);
 				assert(service.isMember("service_name"));
 				std::string servName = service["service_name"].asString();
 				assert(servArch.find(servName) == servArch.end());
@@ -77,10 +77,11 @@ ClusterParser::ClusterParser(const std::string& cluster_dir, double kqps, bool d
 		while(entry != nullptr) {
 			std::string fname = std::string(entry->d_name);
 			if(fname == servFname) {
-				Json::Reader reader;
+				Json::CharReaderBuilder reader;
 				Json::Value servSpec;
 				std::string fullPath = defServDir + "/" + servFname;
-				reader.parse(fullPath, servSpec);
+				std::ifstream sf(fullPath);
+				Json::parseFromStream(reader, sf, &servSpec, nullptr);
 				// cache the spec
 				servArch["net_stack"] = servSpec;
 				found = true;
@@ -372,10 +373,10 @@ ClusterParser::parsCluster() {
 	std::string machFname = clusterDir + "/machines.json";
 	struct stat pathStat;
 	if(stat(machFname.c_str(), &pathStat) == 0 && S_ISREG(pathStat.st_mode) != 0) {
-		Json::Reader reader;
+		Json::CharReaderBuilder reader;
 		Json::Value machines;
 		std::ifstream mf(machFname);
-		reader.parse(mf, machines);
+		Json::parseFromStream(reader, mf, &machines, nullptr);
 		for(unsigned i = 0; i < machines.size(); ++i) {
 			Json::Value& machine = machines[i];
 			assert(machine.isMember("machine_id"));
@@ -480,10 +481,10 @@ ClusterParser::parsCluster() {
 	/*** dependency graph spec  ***/
 	std::string graphFname = clusterDir + "/graph.json";
 	if(stat(graphFname.c_str(), &pathStat) == 0 && S_ISREG(pathStat.st_mode) != 0) {
-		Json::Reader reader;
+		Json::CharReaderBuilder reader;
 		Json::Value depdGraph;
 		std::ifstream gf(graphFname);
-		reader.parse(gf, depdGraph);
+		Json::parseFromStream(reader, gf, &depdGraph, nullptr);
 		// net latency & tcp
 		assert(depdGraph.isMember("net_latency"));
 		Time netLat = depdGraph["net_latency"].asUInt();
@@ -524,7 +525,8 @@ ClusterParser::parsCluster() {
 					if(fname == servFname) {
 						Json::Value servSpec;
 						std::string fullPath = defServDir + "/" + servFname;
-						reader.parse(fullPath, servSpec);
+						std::ifstream sf(fullPath);
+						Json::parseFromStream(reader, sf, &servSpec, nullptr);
 						// cache the spec
 						servArch[modelName] = servSpec;
 						ms = parsMicroServ(servName, servDomain, instName, servSpec);
@@ -671,10 +673,10 @@ ClusterParser::parsCluster() {
 	std::vector<unsigned> pathDistr;
 	std::string pathFname = clusterDir + "/path.json";
 	if(stat(pathFname.c_str(), &pathStat) == 0 && S_ISREG(pathStat.st_mode) != 0) {
-		Json::Reader reader;
+		Json::CharReaderBuilder reader;
 		Json::Value allPathSpec;
 		std::ifstream pf(pathFname);
-		reader.parse(pf, allPathSpec);
+		Json::parseFromStream(reader, pf, &allPathSpec, nullptr);
 		for(unsigned i = 0; i < allPathSpec.size(); ++i) {
 			assert(allPathSpec[i].isMember("probability"));
 			unsigned prob = allPathSpec[i]["probability"].asUInt();
@@ -703,17 +705,14 @@ ClusterParser::parsClient(unsigned num_conn, Time net_lat, double kqps, bool deb
 
 	struct stat pathStat;
 	if(stat(cliFname.c_str(), &pathStat) == 0 && S_ISREG(pathStat.st_mode) != 0) {
-		Json::Reader reader;
+		Json::CharReaderBuilder reader;
 		Json::Value cliSpec;
 		std::ifstream cf(cliFname);
-		reader.parse(cf, cliSpec);
+		Json::parseFromStream(reader, cf, &cliSpec, nullptr);
 
 		assert(cliSpec.isMember("monitor_interval_sec"));
 		Time monitor_interval = (Time) (cliSpec["monitor_interval_sec"].asDouble() * 1000000000);
 
-		// assume both machines start from 2.6GHz
-		unsigned init_memc_freq = 2600;
-		unsigned init_ngx_freq = 2600;
 		// first 0 represents 0 jobs
 		Client* client = new Client(0, num_conn, net_lat, debug,
 				monitor_interval);
