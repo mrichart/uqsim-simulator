@@ -58,9 +58,9 @@ Machine::getNet() {
 }
 
 void
-Machine::setNetLat(Time lat) {
+Machine::setClientLat(Time lat) {
 	assert(netStack != nullptr);
-	netStack->setNetLat(lat);
+	netStack->setClientLat(lat);
 }
 
 void

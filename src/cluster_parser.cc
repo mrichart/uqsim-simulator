@@ -495,8 +495,12 @@ ClusterParser::parsCluster() {
 			cluster->addMachinesLink(mid1, mid2, cap, lat);
 		}
 
-		std::cout << "done machines.json" << std::endl;
+		// latency from machine 0 to the client
+		assert(machinesGraph.isMember("client_latency"));
+		Time clientLat = machinesGraph["client_latency"].asUInt();
+		cluster->setClientLat(clientLat);
 
+		std::cout << "done machines.json" << std::endl;
 	}
 
 	/*** dependency graph spec  ***/
@@ -506,10 +510,6 @@ ClusterParser::parsCluster() {
 		Json::Value depdGraph;
 		std::ifstream gf(graphFname);
 		Json::parseFromStream(reader, gf, &depdGraph, nullptr);
-		// net latency & tcp
-		assert(depdGraph.isMember("net_latency"));
-		Time netLat = depdGraph["net_latency"].asUInt();
-		cluster->setNetLat(netLat);
 
 		// micro-service
 		Json::Value& services = depdGraph["microservices"];

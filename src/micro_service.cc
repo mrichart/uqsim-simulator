@@ -443,7 +443,7 @@ MicroService::send(Job* j) {
 NetStack::NetStack(unsigned id, const std::string& instName, const std::string& servName, const std::string& servDomain, bool debug, EventQueue* eq):
 	MicroService(id, instName, servName, servDomain, false, true, 2600, 2600, debug, eq) {
 		common = false;
-		netLat = INVALID_TIME;
+		clientLat = INVALID_TIME;
 }
 
 void
@@ -465,8 +465,8 @@ NetStack::addLocalServ(MicroService* serv) {
 }
 
 void
-NetStack::setNetLat(Time lat) {
-	netLat = lat;
+NetStack::setClientLat(Time lat) {
+	clientLat = lat;
 }
 
 void
@@ -618,11 +618,11 @@ NetStack::eventHandler(Event* event, Time globalTime) {
 
 void
 NetStack::send(Job* j) {
-	assert(netLat >= 0);
 	j->in_nic = false;
 	// TODO: should actually sent to client
 	if(j->getServName() == "client") {
-		j->time += netLat;
+		assert(clientLat >= 0);
+		j->time += clientLat;
 		// assert(dummyClient != nullptr);
 		// dummyClient->enqueue(j);
 		delete j;

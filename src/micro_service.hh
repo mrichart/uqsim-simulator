@@ -125,7 +125,7 @@ class NetStack: public MicroService
 		// micro-services that are on the same service as this tcp
 		std::unordered_map<unsigned, MicroService*> localServ;
 
-		Time netLat;
+		Time clientLat;
 
 	public:
 
@@ -136,7 +136,7 @@ class NetStack: public MicroService
 		void addConn(unsigned serv_id, NetStack* tcp, Time netLat);	
 		void setLocalServ(std::unordered_map<unsigned, MicroService*> local_serv);
 		void addLocalServ(MicroService* serv);
-		void setNetLat(Time lat);
+		void setClientLat(Time lat);
 
 		// derived
 		void addSendChn(MicroService* s) override;

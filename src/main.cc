@@ -60,19 +60,18 @@ void output_stats(Time end2end_tail, std::unordered_map<std::string, Time> lat_i
 int main(int argc, char* argv[]) {
 	assert(argc >= 4);
 	std::string clusterDir = std::string(argv[1]);
-	unsigned numConn = atoi(argv[2]); 
-	Time netLat = atoi(argv[3]);
+	unsigned numConn = atoi(argv[2]);
 
 	// std::string raplPolicy = std::string(argv[4]);
 	// std::string raplFallbackPolicy = std::string(argv[5]);
 
 	// client config
-	std::string cliTm = std::string(argv[4]);
+	std::string cliTm = std::string(argv[3]);
 	// define load in terms of rps
 	// convert it into us
 	// double avgCliLat = atof(argv[6]);
 
-	double kqps = atof(argv[5]);
+	double kqps = atof(argv[4]);
 	std::cout << "user given qps = " << (unsigned)(kqps*1000) << std::endl;
 
 	// set up files
@@ -95,7 +94,7 @@ int main(int argc, char* argv[]) {
 
 	// debug
 	bool debug = false;
-	if(argc == 7 && std::string(argv[6]) == "debug")
+	if(argc == 6 && std::string(argv[5]) == "debug")
 		debug = true;
 
 	ClusterParser* parser = new ClusterParser(clusterDir, kqps, debug);
@@ -114,7 +113,7 @@ int main(int argc, char* argv[]) {
 	// Client* client = new Client( numConn, netLat, debug);
 
 	// Client* client = parser->parsClient(raplPolicy, raplFallbackPolicy, numConn, netLat, debug);
-	Client* client = parser->parsClient(numConn, netLat, kqps, debug);
+	Client* client = parser->parsClient(numConn, cluster->getClientLat(), kqps, debug);
 	// client->numTotal = 1;
 
 

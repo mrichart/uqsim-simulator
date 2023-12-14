@@ -91,9 +91,14 @@ Cluster::getMachine(unsigned mid) {
 }
 
 void
-Cluster::setNetLat(Time lat) {
-	for(auto m: machineMap)
-		m.second->setNetLat(lat);
+Cluster::setClientLat(Time lat) {
+	clientNat = lat;
+	machineMap[0]->setClientLat(lat);
+}
+
+Time
+Cluster::getClientLat() {
+	return clientNat;
 }
 
 void

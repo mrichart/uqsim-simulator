@@ -40,7 +40,7 @@ class Machine
 
 		void setNet(NetStack* net_stack, const std::string& schedType, unsigned num_queues, std::vector<unsigned> cid);
 		NetStack* getNet();
-		void setNetLat(Time lat);
+		void setClientLat(Time lat);
 
 		void addService(MicroService* serv);
 		std::vector<MicroService*> getServices();

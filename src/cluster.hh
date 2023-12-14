@@ -21,6 +21,8 @@ class Cluster
 
 		EventQueue* eventQueue;
 
+		Time clientNat;
+
 	public:	
 		std::vector<MicroService*> services;
 
@@ -42,7 +44,8 @@ class Cluster
 		// machines
 		void addMachine(Machine* mac);
 		Machine* getMachine(unsigned mid);
-		void setNetLat(Time lat);
+		void setClientLat(Time lat);
+		Time getClientLat();
 		void addMachinesLink(unsigned mid1, unsigned mid2, unsigned cap, Time lat);
 		void setupConn();
 
