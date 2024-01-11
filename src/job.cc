@@ -50,7 +50,7 @@ JobTimeRecords::clear() {
 /***************** Job ********************/
 Job::Job(uint64_t id, unsigned connid, JobTimeRecords* time_records, MicroServPathNode* node, Time initime, Time* ftime, bool* complete, bool debug): 
 	finalTime(ftime), complete(complete), pathNode(node), debug(debug), complRecords(time_records), id(id), connId(connid), startTime(initime), time(initime),
-	enq_time(initime), newPathNode(true), del(false), tailStage(false), net(false), srcServId(unsigned(-1)), targServId(unsigned(-1)), netSend(false)
+	newPathNode(true), del(false), tailStage(false), net(false), srcServId(unsigned(-1)), targServId(unsigned(-1)), netSend(false)
 {
 	// std::cout << "in job constructor id = " << idx << ", ";
 	// std::cout << "numServices = " << numServices << std::endl;
@@ -60,6 +60,7 @@ Job::Job(uint64_t id, unsigned connid, JobTimeRecords* time_records, MicroServPa
 
 	records = new std::unordered_map<unsigned, std::list<JobRecord*>>();
 	servMap = new std::unordered_map<std::string, unsigned> ();
+	enqTime = new std::unordered_map<std::string, Time> ();
 
 	cnt = new int;
 	*cnt = 1;
@@ -94,7 +95,7 @@ Job::Job(Job* j) {
 
 	startTime = j->startTime;
 	time = j->time;
-	enq_time = j->enq_time;
+	enqTime = j->enqTime;
 
 	net = j->net;
 
@@ -230,6 +231,23 @@ Job::getServId(std::string serv_name, std::string serv_func, unsigned& servId) {
 		return false;
 	servId = (*itr).second;
 	return true;
+}
+
+void
+Job::setEnqTime(std::string serv_name, std::string serv_func, Time time) {
+	std::string key = serv_name + '_' + serv_func;
+	auto itr = enqTime->find(key);
+	if (itr == enqTime->end())
+		(*enqTime)[key] = time;
+}
+
+Time
+Job::getEnqTime(std::string serv_name, std::string serv_func) {
+	std::string key = serv_name + '_' + serv_func;
+	auto itr = enqTime->find(key);
+	assert(itr != enqTime->end());
+	enqTime->erase(key);
+	return (*itr).second;
 }
 
 MicroServPathNode*

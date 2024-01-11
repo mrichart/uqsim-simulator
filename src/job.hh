@@ -70,7 +70,8 @@ class Job
 
 		Time startTime;
 		Time time;
-		Time enq_time;
+		// maps (serv_name, serv_func) to the time it first enters the microservice
+		std::unordered_map<std::string, Time>* enqTime;
 
 		// if this job is entering a new pathNode
 		bool newPathNode;
@@ -115,6 +116,8 @@ class Job
 		std::string getServDomain();
 		void setServId(std::string serv_name, std::string serv_func, unsigned servId);
 		bool getServId(std::string serv_name, std::string serv_func, unsigned& servId);
+		void setEnqTime(std::string serv_name, std::string serv_func, Time time);
+		Time getEnqTime(std::string serv_name, std::string serv_func);
 		MicroServPathNode* getPathNode();
 		void setPathNode(MicroServPathNode* node);
 		// if job has reached the last stage (in codePath) specified by current pathNode

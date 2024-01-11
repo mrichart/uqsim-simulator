@@ -234,7 +234,7 @@ MicroService::eventHandler(Event* event, Time globalTime) {
 				}
 
 				if(servCompl)
-					resp_time.push_back(job->time - job->enq_time );
+					resp_time.push_back(job->time - job->getEnqTime(servName, servDomain));
 
 				if(job->del)
 					delete job;
@@ -310,7 +310,7 @@ MicroService::enqueue(Job* j) {
 	}
 	Event* event = new Event(Event::EventType::JOB_RECV);
 	event->time = j->time;
-	j->enq_time = j->time;
+	j->setEnqTime(servName, servDomain, j->time);
 	event->jobList.push_back(j);
 	insertEvent(event);
 	if(debug) {
