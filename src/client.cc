@@ -29,8 +29,12 @@ Client::Client(unsigned total, unsigned nconn, Time net_lat, bool debug, Time mo
 	allJobIssued = false;
 	curEpoch = 0;
 
-	// performance monitoring, assume 50k qps
-	uint64_t init_size = uint64_t(monitorInterval/1000000000.0*50);
+	// performance monitoring, assume 50kqps and 60 seconds
+	uint64_t init_size;
+	if (monitorInterval == 0)
+		init_size = 60*50;
+	else
+	 	init_size = uint64_t(monitorInterval/1000000000.0*50);
 	respTimeRecords = new JobTimeRecords(init_size);
 }
 
@@ -71,10 +75,10 @@ Client::nextEventTime() {
 	if(allJobIssued)
 		// return lastMonitorTime + monitorInterval;
 		return INVALID_TIME;
-	else {
+	else if (monitorInterval != 0)
 		return (lastMonitorTime + monitorInterval) < nextTime ? (lastMonitorTime + monitorInterval): nextTime;
-		// return nextTime;
-	}
+	else
+		return nextTime;
 }
 
 bool
@@ -83,7 +87,7 @@ Client::needSched(Time cur_time) {
 	// std::cout << "cur_time = " << cur_time << std::endl;
 	// std::cout << "lastMonitorTime = " << lastMonitorTime << std::endl;
 	// std::cout << "monitorInterval = " << monitorInterval << std::endl;
-	if(cur_time >= lastMonitorTime + monitorInterval) {
+	if(monitorInterval != 0 && cur_time >= lastMonitorTime + monitorInterval) {
 		// std::cout << "cur_time = " << cur_time << std::endl;
 		// std::cout << "lastMonitorTime = " << lastMonitorTime << std::endl;
 		// std::cout << "monitorInterval = " << monitorInterval << std::endl;

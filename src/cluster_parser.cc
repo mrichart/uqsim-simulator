@@ -735,8 +735,7 @@ ClusterParser::parsClient(unsigned num_conn, Time net_lat, double kqps, bool deb
 		Time monitor_interval = (Time) (cliSpec["monitor_interval_sec"].asDouble() * 1000000000);
 
 		// first 0 represents 0 jobs
-		Client* client = new Client(0, num_conn, net_lat, debug,
-				monitor_interval);
+		Client* client = new Client(0, num_conn, net_lat, debug, monitor_interval);
 
 		// assign epochs to cluster
 		assert(cliSpec.isMember("epoch_end_sec"));
