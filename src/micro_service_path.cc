@@ -166,7 +166,7 @@ MicroServPath::setSyncNode() {
 
 void
 MicroServPath::setSyncNum(unsigned nodeId, unsigned syncNum) {
-	std::cout << "Node: " << nodeId << " syncNum set to " << syncNum << std::endl;
+	//std::cout << "Node: " << nodeId << " syncNum set to " << syncNum << std::endl;
 	graph[nodeId]->setSyncNum(syncNum);
 }
 
