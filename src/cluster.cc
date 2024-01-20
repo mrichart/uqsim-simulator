@@ -272,8 +272,8 @@ Cluster::getPerTierTail(std::unordered_map<std::string, Time>& lat_info) {
 void
 Cluster::showStats(Time time) {
 	for(MicroService* serv: services) {
-		//if (serv->getName().find("net_stack") != std::string::npos)
-		//	continue;
+		if (serv->getName().find("net_stack") != std::string::npos)
+			continue;
 		double util = serv->getCpuUtil(time);
 		uint64_t tx = serv->getTxRequests();
 		std::cout << serv->getName() << ":"<< util << ";" << tx/(time/1000000000.0) << ";" << serv->getPercentileLat(0.2)/1000000.0 << ";"
