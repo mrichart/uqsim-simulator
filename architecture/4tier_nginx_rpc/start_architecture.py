@@ -6,6 +6,7 @@
 
 import subprocess
 import argparse
+import os
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Generate a service graph with input arguments')
@@ -40,6 +41,11 @@ def parse_arguments():
 # Generate microservices
 def generate_microservices():
     try:
+        #Call net_stack.py
+        proc = subprocess.run(['python3', 'net_stack.py'])
+        if proc.returncode == 0:
+            print("net_stack.py successfully executed")
+
         # Call nginx.py
         proc = subprocess.run(['python3', 'nginx.py'])
         if proc.returncode == 0:
@@ -73,10 +79,10 @@ def generate_microservices():
     except FileNotFoundError as e:
         print(e)
 
-def geneate_client(end_seconds, monitor_interval):
+def generate_client(end_seconds, monitor_interval):
     try:
         # Call client.py
-        proc = subprocess.run(['python3', 'client.py'], input=f"--end_seconds {end_seconds} --monitor_interval {monitor_interval}".encode('utf-8'))
+        proc = subprocess.run(['python3', 'client.py', f"--end_seconds={end_seconds}", f"--monitor_interval={monitor_interval}"])
         if proc.returncode == 0:
             print("client.py successfully executed")
 
@@ -96,7 +102,7 @@ def generate_machines(file):
 def generate_graph(ngxThreads, phpThreads, phpIOThreads, mmcThreads, mongoThreads, mongoIOThreads, ngxCores, phpCores, phpIOCores, mmcCores, mongoCores, mongoIOCores, machNxg, machPhp, machPhpIO, machMmc, machMongo, machMongoIO):
     try:
         # Call graph.py
-        proc = subprocess.run(['python3', 'graph.py'], input="--ngxThreads {ngxThreads} --phpThreads {phpThreads} --phpIOThreads {phpIOThreads} --mmcThreads {mmcThreads} --mongoThreads {mongoThreads} --mongoIOThreads {mongoIOThreads} --ngxCores {ngxCores} --phpCores {phpCores} --phpIOCores {phpIOCores} --mmcCores {mmcCores} --mongoCores {mongoCores} --mongoIOCores {mongoIOCores} --machNxg {machNxg} --machPhp {machPhp} --machPhpIO {machPhpIO} --machMmc {machMmc} --machMongo {machMongo} --machMongoIO {machMongoIO}".encode('utf-8'))
+        proc = subprocess.run(['python3', 'graph.py', f"--ngxThreads={ngxThreads}", f"--phpThreads={phpThreads}", f"--phpIOThreads={phpIOThreads}", f"--mmcThreads={mmcThreads}", f"--mongoThreads={mongoThreads}", f"--mongoIOThreads={mongoIOThreads}", f"--ngxCores={ngxCores}", f"--phpCores={phpCores}", f"--phpIOCores={phpIOCores}", f"--mmcCores={mmcCores}", f"--mongoCores={mongoCores}", f"--mongoIOCores={mongoIOCores}", f"--machNxg={machNxg}", f"--machPhp={machPhp}", f"--machPhpIO={machPhpIO}", f"--machMmc={machMmc}", f"--machMongo={machMongo}", f"--machMongoIO={machMongoIO}"])
         if proc.returncode == 0:
             print("graph.py successfully executed")
 
@@ -114,9 +120,13 @@ def generate_path():
         print(e)
 
 def main():
+    os.makedirs("json/microservice", exist_ok=True)
     args = parse_arguments()
     generate_microservices()
-    geneate_client(args.end_seconds, args.monitor_interval)
+    generate_client(args.end_seconds, args.monitor_interval)
     generate_machines(args.machinesFile)
     generate_graph(args.ngxThreads, args.phpThreads, args.phpIOThreads, args.mmcThreads, args.mongoThreads, args.mongoIOThreads, args.ngxCores, args.phpCores, args.phpIOCores, args.mmcCores, args.mongoCores, args.mongoIOCores, args.machNxg, args.machPhp, args.machPhpIO, args.machMmc, args.machMongo, args.machMongoIO)
     generate_path()
+
+if __name__ == "__main__":
+    main()
