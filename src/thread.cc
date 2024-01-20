@@ -71,7 +71,9 @@ Thread::enqueue(Job* j) {
 
 	auto& queue = queues[path][stage];
 
-	// std::cout << "in Thread::enqueue(), queue size = " << queue.size() << std::endl;
+	//TODO print thread queue size
+	//if (queue.size() > 1)
+	//	std::cout << "in Thread::enqueue(), queue size = " << queue.size() << " " << j->getServName() << std::endl;
 	unsigned offset = 0;
 
 	if(j->waitResp()) {
