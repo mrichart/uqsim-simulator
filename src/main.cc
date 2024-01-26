@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
 	std::cout << "user given qps = " << (unsigned)(kqps*1000) << std::endl;
 
 	// set up files
-	FILE* f = fopen(stats_output_file.c_str(), "w+");
+	/*FILE* f = fopen(stats_output_file.c_str(), "w+");
 	if(f == nullptr) {
 		std::cout << "Cannot create " << stats_output_file << std::endl;
 		exit(-1);
@@ -88,6 +88,7 @@ int main(int argc, char* argv[]) {
 		exit(-1);
 	}
 	fclose(f);
+	*/
 
 	// unsigned ngx_freq = atoi(argv[6]);
 	// unsigned memc_freq = atoi(argv[7]);
