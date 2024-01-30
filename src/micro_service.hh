@@ -55,8 +55,7 @@ class MicroService
 		unsigned baseFreq;
 		unsigned curFreq;
 
-
-		std::vector<Time> resp_time;
+		std::unordered_map<int, std::vector<Time> > resp_time;
 
 	public:
 		bool common;
@@ -105,6 +104,8 @@ class MicroService
 		Time getPercentileLat(double percentile);
 		void clearRespTime();
 		uint64_t getTxRequests();
+		std::unordered_map<int, Time> getPercentileLatPerPath(double percentile);
+		std::unordered_map<int, uint64_t> getTxRequestsPerPath();
 
 		void setFreq(unsigned freq);
 
