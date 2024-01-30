@@ -277,8 +277,15 @@ Cluster::showStats(Time time) {
 		double util = serv->getCpuUtil(time);
 		uint64_t tx = serv->getTxRequests();
 		std::cout << serv->getName() << ":"<< util << ";" << tx/(time/1000000000.0) << ";" << serv->getPercentileLat(0.2)/1000000.0 << ";"
-		 << serv->getPercentileLat(0.3)/1000000.0 << ";" << serv->getPercentileLat(0.5)/1000000.0 << ";" 
-		 << serv->getPercentileLat(0.95)/1000000.0 << ";" << serv->getPercentileLat(0.99)/1000000.0 << ";" << std::endl;
+			<< serv->getPercentileLat(0.3)/1000000.0 << ";" << serv->getPercentileLat(0.5)/1000000.0 << ";" 
+			<< serv->getPercentileLat(0.95)/1000000.0 << ";" << serv->getPercentileLat(0.99)/1000000.0 << ";" << std::endl;
+
+		std::unordered_map<int, uint64_t> txPath = serv->getTxRequestsPerPath();
+		for (auto it = txPath.begin(); it != txPath.end(); ++it) {
+			std::cout << serv->getName() << it->first << ":" << it->second/(time/1000000000.0) << ";" << serv->getPercentileLatPerPath(0.2)[it->first]/1000000.0 << ";"
+		 		<< serv->getPercentileLatPerPath(0.3)[it->first]/1000000.0 << ";" << serv->getPercentileLatPerPath(0.5)[it->first]/1000000.0 << ";" 
+		 		<< serv->getPercentileLatPerPath(0.95)[it->first]/1000000.0 << ";" << serv->getPercentileLatPerPath(0.99)[it->first]/1000000.0 << ";" << std::endl;
+		}
 		serv->clearRespTime();
 	}
 }
