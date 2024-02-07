@@ -237,6 +237,7 @@ int main(int argc, char* argv[]) {
 
 	// check for deadlock
 	bool deadlock = cluster->jobLeft();
+	//TODO sometimes this assert fails
 	//assert(!deadlock);
 
 	std::cout << "Simulation ended at time " << globalTime/1000000000.0 << "s" << std::endl;
