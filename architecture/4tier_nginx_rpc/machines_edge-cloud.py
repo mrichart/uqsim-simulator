@@ -18,8 +18,8 @@ def main():
 	m3 = march.make_machine(mid = 3, name = "machine_3", cores = 40, netSched = sched)
 
 	l1 = march.make_machine_links(0, 1, 0, 100)
-	l2 = march.make_machine_links(0, 2, 0, 35000000)
-	l3 = march.make_machine_links(1, 2, 0, 35000000)
+	l2 = march.make_machine_links(0, 2, 35000000, 100)
+	l3 = march.make_machine_links(1, 2, 35000000, 100)
 	l4 = march.make_machine_links(2, 3, 0, 100)
 
 	machines = [m0, m1, m2, m3]
