@@ -22,6 +22,7 @@ class JobTimeRecords
 {
 	protected:
 		std::vector<Time> jobComplTime;
+		std::unordered_map<unsigned, std::vector<Time>> jobComplTimePerPath;
 
 	public:
 		JobTimeRecords(unsigned init_size);
@@ -29,11 +30,16 @@ class JobTimeRecords
 
 		// add 
 		void jobCompl(Time time);
-		Time getPercentileLat(double percentil);
-		Time getAvgLat();
-		std::vector<uint64_t> getAllLat();
+        void jobComplPerPath(unsigned pathId, Time time);
+        Time getPercentileLat(double percentil);
+        Time gerPercentileLatPerPath(unsigned pathId, double percentile);
+        Time getAvgLat();
+        Time getAvgLatPerPath(unsigned pathId);
+        std::vector<uint64_t> getAllLat();
 
-		void clear();
+        std::unordered_map<unsigned, std::vector<Time>> getAllLatPerPath();
+
+        void clear();
 };
 
 class Job
@@ -67,6 +73,8 @@ class Job
 		unsigned connId;
 		unsigned net_code_path;
 		bool in_nic;
+
+		unsigned pathId;
 
 		Time startTime;
 		Time time;

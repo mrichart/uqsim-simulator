@@ -179,6 +179,16 @@ Client::show() {
 			<< "ms" << std::endl;
 	}
 	std::cout << (double)avg_lat/1000000.0 << ";" << (double)lat_50/1000000.0 << ";" << (double)tail_lat_95/1000000.0 << ";" << (double)tail_lat_99/1000000.0 << std::endl;
+
+	// show per path latency
+	std::unordered_map<unsigned, std::vector<Time>> latPerPath = respTimeRecords->getAllLatPerPath();
+	for (unsigned i = 0; i < latPerPath.size(); ++i) {
+		Time avg_lat = respTimeRecords->getAvgLatPerPath(i);
+		Time lat_50 = respTimeRecords->gerPercentileLatPerPath(i, 0.5);
+		Time tail_lat_95 = respTimeRecords->gerPercentileLatPerPath(i, 0.95);
+		Time tail_lat_99 = respTimeRecords->gerPercentileLatPerPath(i, 0.99);
+		std::cout << i << ": " << (double)avg_lat/1000000.0 << ";" << (double)lat_50/1000000.0 << ";" << (double)tail_lat_95/1000000.0 << ";" << (double)tail_lat_99/1000000.0 << std::endl;
+	}
 }
 
 void
