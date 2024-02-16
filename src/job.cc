@@ -16,6 +16,13 @@ JobTimeRecords::jobCompl(Time time) {
 	jobComplTime.push_back(time);
 }
 
+void
+JobTimeRecords::jobComplPerPath(unsigned pathId, Time time) {
+	if(jobComplTimePerPath.find(pathId) == jobComplTimePerPath.end())
+		jobComplTimePerPath[pathId] = std::vector<Time>();
+	jobComplTimePerPath[pathId].push_back(time);
+}
+
 Time
 JobTimeRecords::getPercentileLat(double percentile) {
 	if(jobComplTime.size() == 0)
@@ -23,6 +30,18 @@ JobTimeRecords::getPercentileLat(double percentile) {
 	std::sort(jobComplTime.begin(), jobComplTime.end());
 	unsigned pos = unsigned(percentile *jobComplTime.size());
 	return jobComplTime[pos]; 
+}
+
+Time
+JobTimeRecords::gerPercentileLatPerPath(unsigned pathId, double percentile) {
+	if(jobComplTimePerPath.find(pathId) == jobComplTimePerPath.end())
+		return INVALID_TIME;
+	std::vector<Time>& lat = jobComplTimePerPath[pathId];
+	if(lat.size() == 0)
+		return INVALID_TIME;
+	std::sort(lat.begin(), lat.end());
+	unsigned pos = unsigned(percentile * lat.size());
+	return lat[pos];
 }
 
 Time
@@ -36,15 +55,34 @@ JobTimeRecords::getAvgLat() {
 	return total/jobComplTime.size();
 }
 
+Time
+JobTimeRecords::getAvgLatPerPath(unsigned pathId) {
+	if(jobComplTimePerPath.find(pathId) == jobComplTimePerPath.end())
+		return INVALID_TIME;
+	std::vector<Time>& lat = jobComplTimePerPath[pathId];
+	if(lat.size() == 0)
+		return INVALID_TIME;
+	Time total = 0;
+	for(Time l: lat)
+		total += l;
+
+	return total/lat.size();
+}
+
 std::vector<uint64_t> 
 JobTimeRecords::getAllLat() {
-
 	return jobComplTime;
+}
+
+std::unordered_map<unsigned, std::vector<Time>>
+JobTimeRecords::getAllLatPerPath() {
+	return jobComplTimePerPath;
 }
 
 void
 JobTimeRecords::clear() {
 	jobComplTime.clear();
+	jobComplTimePerPath.clear();
 }
 
 /***************** Job ********************/
@@ -93,6 +131,8 @@ Job::Job(Job* j) {
 	id = j->id;
 	connId = j->connId;
 
+	pathId = j->pathId;
+
 	startTime = j->startTime;
 	time = j->time;
 	enqTime = j->enqTime;
@@ -127,6 +167,7 @@ Job::~Job() {
 		// insert complete time into records
 		assert(complRecords != nullptr);
 		complRecords->jobCompl(*finalTime - startTime);
+		complRecords->jobComplPerPath(pathId, *finalTime - startTime);
 
 		delete cnt;
 

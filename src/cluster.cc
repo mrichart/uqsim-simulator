@@ -124,6 +124,7 @@ Cluster::enqueue(Job* j) {
 	while(pathDistr[i] < prob)
 		++i;
 	j->setPathNode(paths[i].getEntry());
+	j->pathId = i;
 	MicroServPathNode* node = paths[i].getEntry();
 	// std::pair<std::string, std::string> key = std::pair<std::string, std::string> (node->getServName(), node->getServDomain());
 	std::string key = node->getServName() + '_' + node->getServDomain();
