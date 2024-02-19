@@ -178,7 +178,7 @@ Client::show() {
 		std::cout << "99% tail lat within [" << (double)lastMonitorTime/1000000000.0 << "s, sim_end) = " << (double)tail_lat_99/1000000.0
 			<< "ms" << std::endl;
 	}
-	std::cout << (double)avg_lat/1000000.0 << ";" << (double)lat_50/1000000.0 << ";" << (double)tail_lat_95/1000000.0 << ";" << (double)tail_lat_99/1000000.0 << std::endl;
+	std::cout << "total:" << (double)avg_lat/1000000.0 << ";" << (double)lat_50/1000000.0 << ";" << (double)tail_lat_95/1000000.0 << ";" << (double)tail_lat_99/1000000.0 << std::endl;
 
 	// show per path latency
 	std::unordered_map<unsigned, std::vector<Time>> latPerPath = respTimeRecords->getAllLatPerPath();
@@ -187,7 +187,7 @@ Client::show() {
 		Time lat_50 = respTimeRecords->gerPercentileLatPerPath(i, 0.5);
 		Time tail_lat_95 = respTimeRecords->gerPercentileLatPerPath(i, 0.95);
 		Time tail_lat_99 = respTimeRecords->gerPercentileLatPerPath(i, 0.99);
-		std::cout << i << ": " << (double)avg_lat/1000000.0 << ";" << (double)lat_50/1000000.0 << ";" << (double)tail_lat_95/1000000.0 << ";" << (double)tail_lat_99/1000000.0 << std::endl;
+		std::cout << "path" << i << ":" << (double)avg_lat/1000000.0 << ";" << (double)lat_50/1000000.0 << ";" << (double)tail_lat_95/1000000.0 << ";" << (double)tail_lat_99/1000000.0 << std::endl;
 	}
 }
 
