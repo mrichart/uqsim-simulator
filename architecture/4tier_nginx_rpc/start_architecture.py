@@ -97,7 +97,8 @@ def generate_client(end_seconds, monitor_interval):
 def generate_machines(latency_0_1, latency_0_2, latency_1_2, latency_2_3, latency_cli):
     try:
         # Call machines.py
-        return_code = subprocess.run(['python', 'machines.py', "--latency_0_1={}".format(latency_0_1), "--latency_0_2={}".format(latency_0_2), "--latency_1_2={}".format(latency_1_2), "--latency_2_3={}".format(latency_2_3), "--latency_cli={}".format(latency_cli)])
+        command = ['python', 'machines.py', "--latency_0_1={}".format(latency_0_1), "--latency_0_2={}".format(latency_0_2), "--latency_1_2={}".format(latency_1_2), "--latency_2_3={}".format(latency_2_3), "--latency_cli={}".format(latency_cli)]
+        return_code = subprocess.call(command)
         if return_code == 0:
             print("machines.py successfully executed")
 
