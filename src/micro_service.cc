@@ -233,8 +233,10 @@ MicroService::eventHandler(Event* event, Time globalTime) {
 					servComplDecided = true;
 				}
 
-				if(servCompl)
-					resp_time.push_back(job->time - job->getEnqTime(servName, servDomain));
+				if(servCompl){
+					int path = job->getPathNode()->getCodePath();
+					resp_time[path].push_back(job->time - job->getEnqTime(servName, std::to_string(path)));
+				}
 
 				if(job->del)
 					delete job;
@@ -310,7 +312,8 @@ MicroService::enqueue(Job* j) {
 	}
 	Event* event = new Event(Event::EventType::JOB_RECV);
 	event->time = j->time;
-	j->setEnqTime(servName, servDomain, j->time);
+	int path = j->getPathNode()->getCodePath();
+	j->setEnqTime(servName, std::to_string(path), j->time);
 	event->jobList.push_back(j);
 	insertEvent(event);
 	if(debug) {
@@ -355,14 +358,45 @@ Time
 MicroService::getPercentileLat(double percentile) {
 	if(resp_time.empty())
 		return INVALID_TIME;
-	std::sort(resp_time.begin(), resp_time.end());
-	return resp_time[unsigned(percentile * resp_time.size())];
+	std::vector<Time> mergedVector;
+	for (const auto& pair : resp_time) {
+		mergedVector.insert(mergedVector.end(), pair.second.begin(), pair.second.end());
+	}
+	std::sort(mergedVector.begin(), mergedVector.end());
+	return mergedVector[unsigned(percentile * mergedVector.size())];
 	// resp_time.clear();
 }
 
 uint64_t
 MicroService::getTxRequests(){
-	return resp_time.size();
+	size_t sum = 0;
+	for (const auto& pair : resp_time) {
+		sum += pair.second.size();
+	}
+	return sum;
+}
+
+std::unordered_map<int, Time>
+MicroService::getPercentileLatPerPath(double percentile) {
+	std::unordered_map<int, Time> ret;
+	if(resp_time.empty())
+		ret[-1] = INVALID_TIME;
+	else {
+		for(auto itr: resp_time){
+			std::sort(itr.second.begin(), itr.second.end());
+			ret[itr.first] = itr.second[unsigned(percentile * itr.second.size())];
+		}
+	}
+	return ret;
+	// resp_time.clear();
+}
+
+std::unordered_map<int, uint64_t>
+MicroService::getTxRequestsPerPath(){
+	std::unordered_map<int, uint64_t> ret;
+	for(auto itr: resp_time)
+		ret[itr.first] = itr.second.size();
+	return ret;
 }
 
 void

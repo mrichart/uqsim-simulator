@@ -13,8 +13,12 @@ def parse_arguments():
     parser.add_argument('--end_seconds', type=int, default=60, help='Epoch end time in seconds')
     parser.add_argument('--monitor_interval', type=int, default=0, help='Interval at which the client will monitor the system (in seconds)')
 
-    parser.add_argument('--machinesFile', type=str, default='machines.py', help='File that contains the machines configuration')
-    
+    parser.add_argument('--latency_0_1', type=int, default=0, help='Latency between machine 0 and 1')
+    parser.add_argument('--latency_0_2', type=int, default=0, help='Latency between machine 0 and 2')
+    parser.add_argument('--latency_1_2', type=int, default=0, help='Latency between machine 1 and 2')
+    parser.add_argument('--latency_2_3', type=int, default=0, help='Latency between machine 2 and 3')
+    parser.add_argument('--latency_cli', type=int, default=0, help='Latency between client and machine 0')
+
     parser.add_argument('--ngxThreads', type=int, default=8, help='Number of Nginx threads')
     parser.add_argument('--phpThreads', type=int, default=8, help='Number of PHP threads')
     parser.add_argument('--phpIOThreads', type=int, default=8, help='Number of PHP IO threads')
@@ -90,10 +94,10 @@ def generate_client(end_seconds, monitor_interval):
     except FileNotFoundError as e:
         print(e)
 
-def generate_machines(file):
+def generate_machines(latency_0_1, latency_0_2, latency_1_2, latency_2_3, latency_cli):
     try:
         # Call machines.py
-        return_code = subprocess.call(['python', file])
+        return_code = subprocess.run(['python', 'machines.py', f"--latency_0_1={latency_0_1}", f"--latency_0_2={latency_0_2}", f"--latency_1_2={latency_1_2}", f"--latency_2_3={latency_2_3}", f"--latency_cli={latency_cli}"])
         if return_code == 0:
             print("machines.py successfully executed")
 
@@ -143,7 +147,7 @@ def main():
     args = parse_arguments()
     generate_microservices()
     generate_client(args.end_seconds, args.monitor_interval)
-    generate_machines(args.machinesFile)
+    generate_machines(args.latency_0_1, args.latency_0_2, args.latency_1_2, args.latency_2_3, args.latency_cli)
     generate_graph(args.ngxThreads, args.phpThreads, args.phpIOThreads, args.mmcThreads, args.mongoThreads, args.mongoIOThreads, args.ngxCores, args.phpCores, args.phpIOCores, args.mmcCores, args.mongoCores, args.mongoIOCores, args.machNxg, args.machPhp, args.machPhpIO, args.machMmc, args.machMongo, args.machMongoIO)
     generate_path()
 
