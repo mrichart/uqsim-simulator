@@ -1,8 +1,22 @@
+import argparse
 import json
 import make_arch as march 
 
+def parse_arguments():
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--pPath0", type=int, default=86, help="Ratio (int 0-100) of memcached cache hit")
+	parser.add_argument("--pPath1", type=int, default=12, help="Ratio (int 0-100) of memcached miss & mongodb hit")
+	parser.add_argument("--pPath2", type=int, default=2, help="Ratio (int 0-100) of memcached miss & mongodb miss")
+	args = parser.parse_args()
+	return args
 
 def main():
+	args = parse_arguments()
+	pPath0 = args.pPath0
+	pPath1 = args.pPath1
+	pPath2 = args.pPath2
+	assert pPath0 + pPath1 + pPath2 == 100, "Probabilities do not sum to 100"
+
 	# path 0: memcached cache hit
 	nodeList = []
 
@@ -22,7 +36,7 @@ def main():
 		nodeId = 3, needSync = False, syncNodeId = None, childs = [])
 	nodeList.append(node_3)
 
-	path_memc_hit = march.make_serv_path(pathId = 0, entry = 0, prob = 86, nodes = nodeList)
+	path_memc_hit = march.make_serv_path(pathId = 0, entry = 0, prob = pPath0, nodes = nodeList)
 
 	# path 1: memcached miss & mongodb hit
 
@@ -96,7 +110,7 @@ def main():
 		nodeId = 15, needSync = False, syncNodeId = None, childs = [])
 	nodeList.append(node_15)
 
-	path_memc_miss_mongo_hit = march.make_serv_path(pathId = 1, entry = 0, prob = 12, nodes = nodeList)
+	path_memc_miss_mongo_hit = march.make_serv_path(pathId = 1, entry = 0, prob = pPath1, nodes = nodeList)
 
 	# path 2: memcached miss & mongodb miss
 	nodeList = []
@@ -118,7 +132,7 @@ def main():
 	nodeList = [node_0, node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8, node_18, node_19, node_9, node_10, node_11, node_12,
 		node_13, node_14, node_15]
 
-	path_memc_miss_mongo_miss = march.make_serv_path(pathId = 2, entry = 0, prob = 2, nodes = nodeList)
+	path_memc_miss_mongo_miss = march.make_serv_path(pathId = 2, entry = 0, prob = pPath2, nodes = nodeList)
 
 	paths = [path_memc_hit, path_memc_miss_mongo_hit, path_memc_miss_mongo_miss]
 
