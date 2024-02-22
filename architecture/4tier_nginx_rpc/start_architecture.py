@@ -19,6 +19,10 @@ def parse_arguments():
     parser.add_argument('--latency_2_3', type=int, default=0, help='Latency between machine 2 and 3')
     parser.add_argument('--latency_cli', type=int, default=0, help='Latency between client and machine 0')
 
+    parser.add_argument('--pPath0', type=int, default=86, help='Ratio (int 0-100) of memcached cache hit')
+    parser.add_argument('--pPath1', type=int, default=12, help='Ratio (int 0-100) of memcached miss & mongodb hit')
+    parser.add_argument('--pPath2', type=int, default=2, help='Ratio (int 0-100) of memcached miss & mongodb miss')
+
     parser.add_argument('--ngxThreads', type=int, default=8, help='Number of Nginx threads')
     parser.add_argument('--phpThreads', type=int, default=8, help='Number of PHP threads')
     parser.add_argument('--phpIOThreads', type=int, default=8, help='Number of PHP IO threads')
@@ -113,10 +117,10 @@ def generate_graph(ngxThreads, phpThreads, phpIOThreads, mmcThreads, mongoThread
     except FileNotFoundError as e:
         print(e)
 
-def generate_path():
+def generate_path(pPath0, pPath1, pPath2):
     try:
         # Call path.py
-        proc = subprocess.run(['python3', 'path.py'])
+        proc = subprocess.run(['python3', 'path.py', f"--pPath0={pPath0}", f"--pPath1={pPath1}", f"--pPath2={pPath2}"])
         if proc.returncode == 0:
             print("path.py successfully executed")
 
@@ -130,7 +134,7 @@ def main():
     generate_client(args.end_seconds, args.monitor_interval)
     generate_machines(args.latency_0_1, args.latency_0_2, args.latency_1_2, args.latency_2_3, args.latency_cli)
     generate_graph(args.ngxThreads, args.phpThreads, args.phpIOThreads, args.mmcThreads, args.mongoThreads, args.mongoIOThreads, args.ngxCores, args.phpCores, args.phpIOCores, args.mmcCores, args.mongoCores, args.mongoIOCores, args.machNxg, args.machPhp, args.machPhpIO, args.machMmc, args.machMongo, args.machMongoIO)
-    generate_path()
+    generate_path(args.pPath0, args.pPath1, args.pPath2)
 
 if __name__ == "__main__":
     main()
