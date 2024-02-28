@@ -144,7 +144,7 @@ Client::run(Time time) {
 			allJobIssued = true;
 		// check epoch change
 		if(epochEndTime.size() > 0 && nextTime >= epochEndTime[curEpoch]) {
-			//assert(!allJobIssued); TODO it is possible that this is the last job
+			assert(!allJobIssued);
 			if(curEpoch == epochEndTime.size() - 1)
 				allJobIssued = true;
 			else {
