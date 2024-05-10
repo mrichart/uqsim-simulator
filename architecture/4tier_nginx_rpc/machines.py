@@ -6,10 +6,12 @@ NUM_QUE = 30
 
 def parse_args():
 	parser = argparse.ArgumentParser()
-	parser.add_argument("--latency_0_1", type=int, default=0, help="Latency between machine 0 and 1")
-	parser.add_argument("--latency_0_2", type=int, default=0, help="Latency between machine 0 and 2")
-	parser.add_argument("--latency_1_2", type=int, default=0, help="Latency between machine 1 and 2")
-	parser.add_argument("--latency_2_3", type=int, default=0, help="Latency between machine 2 and 3")
+	parser.add_argument('--latency_0_1', type=int, default=0, help='Latency between machine 0 and 1')
+	parser.add_argument('--latency_0_2', type=int, default=0, help='Latency between machine 0 and 2')
+	parser.add_argument('--latency_1_2', type=int, default=0, help='Latency between machine 1 and 2')
+	parser.add_argument('--latency_2_3', type=int, default=0, help='Latency between machine 2 and 3')
+	parser.add_argument('--latency_2_4', type=int, default=0, help='Latency between machine 2 and 4')
+	parser.add_argument('--latency_4_5', type=int, default=0, help='Latency between machine 4 and 5')
 	parser.add_argument("--latency_cli", type=int, default=0, help="Latency between client and machine 0")
 	args = parser.parse_args()
 	return args
@@ -27,14 +29,19 @@ def main():
 	m1 = march.make_machine(mid = 1, name = "machine_1", cores = 40, netSched = sched)
 	m2 = march.make_machine(mid = 2, name = "machine_2", cores = 40, netSched = sched)
 	m3 = march.make_machine(mid = 3, name = "machine_3", cores = 40, netSched = sched)
+	m4 = march.make_machine(mid = 4, name = "machine_4", cores = 40, netSched = sched)
+	m5 = march.make_machine(mid = 5, name = "machine_5", cores = 40, netSched = sched)
+	m6 = march.make_machine(mid = 6, name = "machine_6", cores = 40, netSched = sched)
 
 	l1 = march.make_machine_links(0, 1, args.latency_0_1*1000000, 100)
 	l2 = march.make_machine_links(0, 2, args.latency_0_2*1000000, 100)
 	l3 = march.make_machine_links(1, 2, args.latency_1_2*1000000, 100)
 	l4 = march.make_machine_links(2, 3, args.latency_2_3*1000000, 100)
+	l5 = march.make_machine_links(2, 4, args.latency_2_4*1000000, 100)
+	l6 = march.make_machine_links(4, 5, args.latency_4_5*1000000, 100)
 
-	machines = [m0, m1, m2, m3]
-	links = [l1, l2, l3, l4]
+	machines = [m0, m1, m2, m3, m4, m5, m6]
+	links = [l1, l2, l3, l4, l5, l6]
 	machine_json = march.make_machine_json(machines, links, args.latency_cli*1000000)
 
 	with open("./json/machines.json", "w+") as f:

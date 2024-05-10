@@ -31,27 +31,27 @@ def parse_arguments():
 def main():
     args = parse_arguments()
 
-    sched_nginx = march.make_service_sched("CMT", [args.ngxThreads, list(range(20, 20 + args.ngxCores))], None)
+    sched_nginx = march.make_service_sched("CMT", [args.ngxThreads, list(range(30, 30 + args.ngxCores))], None)
     nginx = march.make_serv_inst(servName="nginx", servDomain="", instName="nginx",
                                 modelName="nginx", sched=sched_nginx, machId=args.machNxg)
 
-    sched_php = march.make_service_sched("CMT", [args.phpThreads, list(range(20, 20 + args.phpCores))], None)
+    sched_php = march.make_service_sched("CMT", [args.phpThreads, list(range(30, 30 + args.phpCores))], None)
     php = march.make_serv_inst(servName="php", servDomain="", instName="php",
                                modelName="php", sched=sched_php, machId=args.machPhp)
 
-    sched_php_io = march.make_service_sched("Simplified", [args.phpIOThreads, list(range(20, 20 + args.phpIOCores))], None)
+    sched_php_io = march.make_service_sched("Simplified", [args.phpIOThreads, list(range(30, 30 + args.phpIOCores))], None)
     php_io = march.make_serv_inst(servName="php_io", servDomain="", instName="php_io",
                                   modelName="php_io", sched=sched_php_io, machId=args.machPhpIO)
 
-    sched_memcached = march.make_service_sched("CMT", [args.mmcThreads, list(range(20, 20 + args.mmcCores))], None)
+    sched_memcached = march.make_service_sched("CMT", [args.mmcThreads, list(range(30, 30 + args.mmcCores))], None)
     memcached = march.make_serv_inst(servName="memcached", servDomain="", instName="memcached",
                                      modelName="memcached", sched=sched_memcached, machId=args.machMmc)
 
-    sched_mongo = march.make_service_sched("CMT", [args.mongoThreads, list(range(20, 20 + args.mongoCores))], None)
+    sched_mongo = march.make_service_sched("CMT", [args.mongoThreads, list(range(30, 30 + args.mongoCores))], None)
     mongodb = march.make_serv_inst(servName="mongodb", servDomain="", instName="mongodb",
                                    modelName="mongodb", sched=sched_mongo, machId=args.machMongo)
 
-    sched_mongo_io = march.make_service_sched("Simplified", [args.mongoIOThreads, list(range(20, 20 + args.mongoIOCores))], None)
+    sched_mongo_io = march.make_service_sched("Simplified", [args.mongoIOThreads, list(range(30, 30 + args.mongoIOCores))], None)
     mongodb_io = march.make_serv_inst(servName="mongo_io", servDomain="", instName="mongo_io",
                                       modelName="mongo_io", sched=sched_mongo_io, machId=args.machMongoIO)
 

@@ -17,6 +17,8 @@ def parse_arguments():
     parser.add_argument('--latency_0_2', type=int, default=0, help='Latency between machine 0 and 2')
     parser.add_argument('--latency_1_2', type=int, default=0, help='Latency between machine 1 and 2')
     parser.add_argument('--latency_2_3', type=int, default=0, help='Latency between machine 2 and 3')
+    parser.add_argument('--latency_2_4', type=int, default=0, help='Latency between machine 2 and 4')
+    parser.add_argument('--latency_4_5', type=int, default=0, help='Latency between machine 4 and 5')
     parser.add_argument('--latency_cli', type=int, default=0, help='Latency between client and machine 0')
 
     parser.add_argument('--pPath0', type=int, default=86, help='Ratio (int 0-100) of memcached cache hit')
@@ -38,11 +40,11 @@ def parse_arguments():
     parser.add_argument('--mongoIOCores', type=int, default=1, help='Number of cores assigned to MongoDB IO')
     
     parser.add_argument('--machNxg', type=int, default=0, help='Machine ID where NGINX is deployed')
-    parser.add_argument('--machPhp', type=int, default=2, help='Machine ID where PHP is deployed')
-    parser.add_argument('--machPhpIO', type=int, default=2, help='Machine ID where PHP IO is deployed')
     parser.add_argument('--machMmc', type=int, default=1, help='Machine ID where Memcached is deployed')
-    parser.add_argument('--machMongo', type=int, default=3, help='Machine ID where MongoDB is deployed')
-    parser.add_argument('--machMongoIO', type=int, default=3, help='Machine ID where MongoDB IO is deployed')
+    parser.add_argument('--machPhp', type=int, default=2, help='Machine ID where PHP is deployed')
+    parser.add_argument('--machPhpIO', type=int, default=3, help='Machine ID where PHP IO is deployed')
+    parser.add_argument('--machMongo', type=int, default=4, help='Machine ID where MongoDB is deployed')
+    parser.add_argument('--machMongoIO', type=int, default=5, help='Machine ID where MongoDB IO is deployed')
     args = parser.parse_args()
     return args
 
@@ -97,10 +99,10 @@ def generate_client(end_seconds, monitor_interval):
     except FileNotFoundError as e:
         print(e)
 
-def generate_machines(latency_0_1, latency_0_2, latency_1_2, latency_2_3, latency_cli):
+def generate_machines(latency_0_1, latency_0_2, latency_1_2, latency_2_3, latency_2_4, latency_4_5, latency_cli):
     try:
         # Call machines.py
-        proc = subprocess.run(['python3', 'machines.py', f"--latency_0_1={latency_0_1}", f"--latency_0_2={latency_0_2}", f"--latency_1_2={latency_1_2}", f"--latency_2_3={latency_2_3}", f"--latency_cli={latency_cli}"])
+        proc = subprocess.run(['python3', 'machines.py', f"--latency_0_1={latency_0_1}", f"--latency_0_2={latency_0_2}", f"--latency_1_2={latency_1_2}", f"--latency_2_3={latency_2_3}", f"--latency_2_4={latency_2_4}", f"--latency_4_5={latency_4_5}", f"--latency_cli={latency_cli}"])
         if proc.returncode == 0:
             print("machines.py successfully executed")
 
@@ -132,7 +134,7 @@ def main():
     args = parse_arguments()
     generate_microservices()
     generate_client(args.end_seconds, args.monitor_interval)
-    generate_machines(args.latency_0_1, args.latency_0_2, args.latency_1_2, args.latency_2_3, args.latency_cli)
+    generate_machines(args.latency_0_1, args.latency_0_2, args.latency_1_2, args.latency_2_3, args.latency_2_4, args.latency_4_5, args.latency_cli)
     generate_graph(args.ngxThreads, args.phpThreads, args.phpIOThreads, args.mmcThreads, args.mongoThreads, args.mongoIOThreads, args.ngxCores, args.phpCores, args.phpIOCores, args.mmcCores, args.mongoCores, args.mongoIOCores, args.machNxg, args.machPhp, args.machPhpIO, args.machMmc, args.machMongo, args.machMongoIO)
     generate_path(args.pPath0, args.pPath1, args.pPath2)
 
