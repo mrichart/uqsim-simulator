@@ -178,6 +178,8 @@ Client::show() {
 		std::cout << "99% tail lat within [" << (double)lastMonitorTime/1000000000.0 << "s, sim_end) = " << (double)tail_lat_99/1000000.0
 			<< "ms" << std::endl;
 	}
+
+	// show total latency. <<name: avg; 50; 95; 99>>
 	std::cout << "total:" << (double)avg_lat/1000000.0 << ";" << (double)lat_50/1000000.0 << ";" << (double)tail_lat_95/1000000.0 << ";" << (double)tail_lat_99/1000000.0 << std::endl;
 
 	// show per path latency

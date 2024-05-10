@@ -367,6 +367,21 @@ MicroService::getPercentileLat(double percentile) {
 	// resp_time.clear();
 }
 
+Time
+MicroService::getAverageLat() {
+	if(resp_time.empty())
+		return INVALID_TIME;
+	std::vector<Time> mergedVector;
+	for (const auto& pair : resp_time) {
+		mergedVector.insert(mergedVector.end(), pair.second.begin(), pair.second.end());
+	}
+	Time total = 0;
+	for(Time l: mergedVector)
+		total += l;
+	return total/mergedVector.size();
+	// resp_time.clear();
+}
+
 uint64_t
 MicroService::getTxRequests(){
 	size_t sum = 0;
@@ -385,6 +400,23 @@ MicroService::getPercentileLatPerPath(double percentile) {
 		for(auto itr: resp_time){
 			std::sort(itr.second.begin(), itr.second.end());
 			ret[itr.first] = itr.second[unsigned(percentile * itr.second.size())];
+		}
+	}
+	return ret;
+	// resp_time.clear();
+}
+
+std::unordered_map<int, Time>
+MicroService::getAverageLatPerPath() {
+	std::unordered_map<int, Time> ret;
+	if(resp_time.empty())
+		ret[-1] = INVALID_TIME;
+	else {
+		for(auto itr: resp_time){
+			Time total = 0;
+			for(Time l: itr.second)
+				total += l;
+			ret[itr.first] = total/itr.second.size();
 		}
 	}
 	return ret;

@@ -102,9 +102,11 @@ class MicroService
 
 		double getCpuUtil(Time elapsed_time);
 		Time getPercentileLat(double percentile);
+		Time getAverageLat();
 		void clearRespTime();
 		uint64_t getTxRequests();
 		std::unordered_map<int, Time> getPercentileLatPerPath(double percentile);
+		std::unordered_map<int, Time> getAverageLatPerPath();
 		std::unordered_map<int, uint64_t> getTxRequestsPerPath();
 
 		void setFreq(unsigned freq);
