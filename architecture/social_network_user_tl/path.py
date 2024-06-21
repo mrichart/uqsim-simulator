@@ -5,11 +5,11 @@ import make_arch as march
 def parse_arguments():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--pPath0", type=int, default=64, help="Ratio (int 0-100) of redis hit & memcached cache hit")
-	parser.add_argument("--pPath1", type=int, default=13, help="Ratio (int 0-100) of redis hit & memcached miss & mongodb hit")
+	parser.add_argument("--pPath1", type=int, default=12, help="Ratio (int 0-100) of redis hit & memcached miss & mongodb hit")
 	parser.add_argument("--pPath2", type=int, default=3, help="Ratio (int 0-100) of redis hit & memcached miss & mongodb miss")
-	parser.add_argument("--pPath3", type=int, default=16, help="Ratio (int 0-100) of redis miss & memcached hit")
-	parser.add_argument("--pPath4", type=int, default=3, help="Ratio (int 0-100) of redis miss & memcached miss & mongodb hit")
-	parser.add_argument("--pPath5", type=int, default=1, help="Ratio (int 0-100) of redis miss & memcached miss & mongodb miss")
+	parser.add_argument("--pPath3", type=int, default=16, help="Ratio (int 0-100) of redis miss & mongo hit & memcached hit")
+	parser.add_argument("--pPath4", type=int, default=3, help="Ratio (int 0-100) of redis miss & mongo hit & memcached miss & mongodb hit")
+	parser.add_argument("--pPath5", type=int, default=2, help="Ratio (int 0-100) of redis miss & mongo hit & memcached miss & mongodb miss")
 	args = parser.parse_args()
 	return args
 
@@ -38,7 +38,7 @@ def main():
 		nodeId = 2, needSync = False, syncNodeId = None, childs = [3])
 	nodeList.append(node_2)
 	
-	node_3 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 0, startStage = 2, endStage = 3,
+	node_3 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 0, startStage = 2, endStage = 4,
 		nodeId = 3, needSync = True, syncNodeId = 7, childs = [4])
 	nodeList.append(node_3)
 
@@ -54,7 +54,7 @@ def main():
 		nodeId = 6, needSync = False, syncNodeId = None, childs = [7])
 	nodeList.append(node_6)
 
-	node_7 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 0, startStage = 4, endStage = -1,
+	node_7 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 0, startStage = 5, endStage = -1,
 		nodeId = 7, needSync = False, syncNodeId = None, childs = [8])
 	nodeList.append(node_7)
 
@@ -116,7 +116,7 @@ def main():
 		nodeId = 0, needSync = True, syncNodeId = 11, childs = [1])
 	nodeList.append(node_0)
 
-	node_1 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 1, startStage = 0, endStage = 2, 
+	node_1 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 0, startStage = 0, endStage = 2, 
 		nodeId = 1, needSync = True, syncNodeId = 3, childs = [2])
 	nodeList.append(node_1)
 	
@@ -124,7 +124,7 @@ def main():
 		nodeId = 2, needSync = False, syncNodeId = None, childs = [3])
 	nodeList.append(node_2)
 	
-	node_3 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 1, startStage = 2, endStage = 3,
+	node_3 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 0, startStage = 2, endStage = 3,
 		nodeId = 3, needSync = True, syncNodeId = 5, childs = [4])
 	nodeList.append(node_3)
 	
@@ -132,8 +132,8 @@ def main():
 		nodeId = 4, needSync = False, syncNodeId = None, childs = [5])
 	nodeList.append(node_4)
 
-	node_5 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 1, startStage = 3, endStage = 4,
-		nodeId = 5, needSync = True, syncNodeId = 10, childs = [6,7])
+	node_5 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 0, startStage = 3, endStage = 4,
+		nodeId = 5, needSync = True, syncNodeId = 10, childs = [6, 7])
 	nodeList.append(node_5)
 
 	node_6 = march.make_serv_path_node(servName = "user_timeline_redis", servDomain = "", codePath = 1, startStage = 0, endStage = -1, 
@@ -152,7 +152,7 @@ def main():
 		nodeId = 9, needSync = False, syncNodeId = None, childs = [10])
 	nodeList.append(node_9)
 
-	node_10 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 1, startStage = 5, endStage = -1,
+	node_10 = march.make_serv_path_node(servName = "user_timeline", servDomain = "", codePath = 0, startStage = 5, endStage = -1,
 		nodeId = 10, needSync = False, syncNodeId = None, childs = [11])
 	nodeList.append(node_10)
 

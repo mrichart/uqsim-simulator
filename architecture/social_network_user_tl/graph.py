@@ -56,9 +56,9 @@ def main():
     user_timeline_mongo = march.make_serv_inst(servName="user_timeline_mongodb", servDomain="", instName="user_timeline_mongodb",
                                     modelName="user_timeline_mongodb", sched=sched_user_timeline_mongo, machId=args.machUtMongo)
 
-    sched_user_timeline_mongo_io = march.make_service_sched("Simplified", [args.utMongoIOThreads, list(range(30, 30 + args.utMongoIOCores))], None)
-    user_timeline_mongo_io = march.make_serv_inst(servName="user_timeline_mongo_io", servDomain="", instName="user_timeline_mongo_io",
-                                        modelName="user_timeline_mongo_io", sched=sched_user_timeline_mongo_io, machId=args.machUtMongoIO)                                
+    #sched_user_timeline_mongo_io = march.make_service_sched("Simplified", [args.utMongoIOThreads, list(range(30, 30 + args.utMongoIOCores))], None)
+    #user_timeline_mongo_io = march.make_serv_inst(servName="user_timeline_mongo_io", servDomain="", instName="user_timeline_mongo_io",
+    #                                    modelName="user_timeline_mongo_io", sched=sched_user_timeline_mongo_io, machId=args.machUtMongoIO)                                
     
     sched_post_storage = march.make_service_sched("CMT", [args.psThreads, list(range(30, 30 + args.psCores))], None)
     post_storage = march.make_serv_inst(servName="post_storage", servDomain="", instName="post_storage",
@@ -76,18 +76,20 @@ def main():
     post_storage_mongo_io = march.make_serv_inst(servName="post_storage_mongo_io", servDomain="", instName="post_storage_mongo_io",
                                       modelName="post_storage_mongo_io", sched=sched_post_storage_mongo_io, machId=args.machPsMongoIO)
 
-    services = [nginx, user_timeline, user_timeline_redis, user_timeline_mongo, user_timeline_mongo_io, post_storage, post_storage_memcached, post_storage_mongodb, post_storage_mongo_io]
+    #services = [nginx, user_timeline, user_timeline_redis, user_timeline_mongo, user_timeline_mongo_io, post_storage, post_storage_memcached, post_storage_mongodb, post_storage_mongo_io]
+    services = [nginx, user_timeline, user_timeline_redis, user_timeline_mongo, post_storage, post_storage_memcached, post_storage_mongodb, post_storage_mongo_io]
 
     edge_0 = march.make_edge(src="nginx", targ="user_timeline", bidir=True)
     edge_1 = march.make_edge(src="user_timeline", targ="user_timeline_redis", bidir=True)
     edge_2 = march.make_edge(src="user_timeline", targ="user_timeline_mongodb", bidir=True)
-    edge_3 = march.make_edge(src="user_timeline_mongodb", targ="user_timeline_mongo_io", bidir=True)
+    #edge_3 = march.make_edge(src="user_timeline_mongodb", targ="user_timeline_mongo_io", bidir=True)
     edge_4 = march.make_edge(src="user_timeline", targ="post_storage", bidir=True)
     edge_5 = march.make_edge(src="post_storage", targ="post_storage_memcached", bidir=True)
     edge_6 = march.make_edge(src="post_storage", targ="post_storage_mongodb", bidir=True)
     edge_7 = march.make_edge(src="post_storage_mongodb", targ="post_storage_mongo_io", bidir=True)
 
-    edges = [edge_0, edge_1, edge_2, edge_3, edge_4, edge_5, edge_6, edge_7]
+    #edges = [edge_0, edge_1, edge_2, edge_3, edge_4, edge_5, edge_6, edge_7]
+    edges = [edge_0, edge_1, edge_2, edge_4, edge_5, edge_6, edge_7]
 
     graph = march.make_cluster(services=services, edges=edges)
 

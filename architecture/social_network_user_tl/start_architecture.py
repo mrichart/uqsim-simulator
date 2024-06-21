@@ -25,11 +25,11 @@ def parse_arguments():
     parser.add_argument("--latency_cli", type=int, default=0, help="Latency between client and machine 0")
 	
     parser.add_argument("--pPath0", type=int, default=64, help="Ratio (int 0-100) of redis hit & memcached cache hit")
-    parser.add_argument("--pPath1", type=int, default=13, help="Ratio (int 0-100) of redis hit & memcached miss & mongodb hit")
+    parser.add_argument("--pPath1", type=int, default=12, help="Ratio (int 0-100) of redis hit & memcached miss & mongodb hit")
     parser.add_argument("--pPath2", type=int, default=3, help="Ratio (int 0-100) of redis hit & memcached miss & mongodb miss")
     parser.add_argument("--pPath3", type=int, default=16, help="Ratio (int 0-100) of redis miss & memcached hit")
     parser.add_argument("--pPath4", type=int, default=3, help="Ratio (int 0-100) of redis miss & memcached miss & mongodb hit")
-    parser.add_argument("--pPath5", type=int, default=1, help="Ratio (int 0-100) of redis miss & memcached miss & mongodb miss")
+    parser.add_argument("--pPath5", type=int, default=2, help="Ratio (int 0-100) of redis miss & memcached miss & mongodb miss")
 
     parser.add_argument('--ngxThreads', type=int, default=8, help='Number of Nginx threads')
     parser.add_argument('--utThreads', type=int, default=8, help='Number of User Timeline threads')
