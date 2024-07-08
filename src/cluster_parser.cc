@@ -195,19 +195,19 @@ ClusterParser::parsMicroServ(const std::string& servName, const std::string& ser
 			if(recvTmSpec["type"].asString() == "expo") {
 				assert(recvTmSpec.isMember("latency"));
 				Time latency = recvTmSpec["latency"].asUInt();
-				if(servName == "mongodb" && stageName == "proc_cache_hit") {
-					latency = latency * 5000/(1000 + kqps * 1000);
-					std::cout << "tune mongodb latency = " << latency << std::endl;
-				}
+				// if(servName == "mongodb" && stageName == "proc_cache_hit") {
+				// 	latency = latency * 5000/(1000 + kqps * 1000);
+				// 	std::cout << "tune mongodb latency = " << latency << std::endl;
+				// }
 
-				if(servName == "mongo_io" && stageName == "disk_io") {
-					unsigned qps = unsigned(qps * 1000);
-					if(qps < 4000)
-						latency = latency * 5000/(1000 + kqps * 1000);
-					// if(qps < 1000)
-					// 	latency = latency * 5000/(1000 + kqps * 1000);
-					std::cout << "tune mongo_io latency = " << latency << std::endl;
-				}
+				// if(servName == "mongo_io" && stageName == "disk_io") {
+				// 	unsigned qps = unsigned(qps * 1000);
+				// 	if(qps < 4000)
+				// 		latency = latency * 5000/(1000 + kqps * 1000);
+				// 	// if(qps < 1000)
+				// 	// 	latency = latency * 5000/(1000 + kqps * 1000);
+				// 	std::cout << "tune mongo_io latency = " << latency << std::endl;
+				// }
 
 				recvTm = new ExpoTimeModel(latency);
 			} else if (recvTmSpec["type"].asString() == "const") {
