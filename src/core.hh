@@ -1,6 +1,7 @@
 #ifndef __CORE_HH__
 #define __CORE_HH__
 #include "util.hh"
+#include <cstdint>
 
 // only indicates avail at this moment
 // leave space for future expansion
