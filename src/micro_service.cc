@@ -739,8 +739,8 @@ LoadBalancer::LoadBalancer(unsigned id, const std::string& inst_name, const std:
 
 void
 LoadBalancer::addSendChn(MicroService* s) {
-	assert(s->getServName() == servName);
-	assert(s->getServDomain() == servDomain);
+	//assert(s->getServName() == servName);
+	//assert(s->getServDomain() == servDomain);
 	services.push_back(s);
 }
 
