@@ -3,7 +3,7 @@ import os
 import json
 import make_arch as march 
 
-PHP_INST = 2
+PHP_INST = 3
 MONGO_INST = 1
 
 def main():
@@ -161,6 +161,7 @@ def main():
 	node = march.make_serv_path_node(servName = "nginx", servDomain = "", codePath = 2, startStage = 0, endStage = -1,
 		nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + 1])
 	nodeList.append(node)
+	cur_node = cur_node + 1
 
 	node = march.make_serv_path_node(servName = "client", servDomain = "", codePath = -1, startStage = 0, endStage = -1, 
 		nodeId = cur_node, needSync = False, syncNodeId = None, childs = [])
@@ -313,6 +314,7 @@ def main():
 	node = march.make_serv_path_node(servName = "nginx", servDomain = "", codePath = 2, startStage = 0, endStage = -1,
 		nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + 1])
 	nodeList.append(node)
+	cur_node = cur_node + 1
 
 	node = march.make_serv_path_node(servName = "client", servDomain = "", codePath = -1, startStage = 0, endStage = -1, 
 		nodeId = cur_node, needSync = False, syncNodeId = None, childs = [])
