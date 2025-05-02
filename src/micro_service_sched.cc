@@ -98,6 +98,8 @@ CMTScheduler::assignThread() {
 
 void 
 CMTScheduler::eventHandler(Event* event, Time globalTime, std::list<Event*>& eventList) {
+	if (debug)
+		printf("In CMTScheduler::eventHandler, event: %s\n", event->present().c_str());
 	if(event->type == Event::EventType::JOB_RECV) {
 		for(auto job: event->jobList) {
 			// std::cout << "IN cmt event handler jid = " << job->id << std::endl;

@@ -345,8 +345,8 @@ ClusterParser::parsServPath(Json::Value& servPath) {
 			// increment childNode's syncNum by 1
 			if(nodeIdSyncNumMap.find(childId) == nodeIdSyncNumMap.end())
 				nodeIdSyncNumMap[childId] = 1;
-			else
-				++nodeIdSyncNumMap[childId];
+			//else
+			//	++nodeIdSyncNumMap[childId];
 		}
 		MicroServPathNode* node = new MicroServPathNode(servName, servDomain, codePath, startStg, endStg, id, nodeId, sync, syncNodeId);
 		path.addNode(node);

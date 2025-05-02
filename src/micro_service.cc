@@ -491,14 +491,20 @@ MicroService::send(Job* j) {
 			assert(suc);
 		} else {
 			// random select a target service
-			unsigned pos = rand() % sendChn[key].size();
-			MicroService* s = sendChn[key][pos];
-			j->setServId(j->getServName(), j->getServDomain(),s->getId());
-			j->targServId = s->getId();
-			if(j->net)
-				netStack->enqueue(j);
-			else
-				s->enqueue(j);	
+			if (!j->getServId(j->getServName(), "", targServ))
+			{
+				unsigned pos = rand() % sendChn[key].size();
+				MicroService* s = sendChn[key][pos];
+				j->setServId(j->getServName(), j->getServDomain(),s->getId());
+				if (j->getServDomain() != "") {
+					j->setServId(j->getServName(), "", s->getId());
+				}
+				j->targServId = s->getId();
+				if(j->net)
+					netStack->enqueue(j);
+				else
+					s->enqueue(j);	
+			}
 		}
 	}
 }
