@@ -280,7 +280,7 @@ def make_edge(src, targ, bidir):
 
 	return edge
 
-def make_cluster(services, edges, netLat):
+def make_cluster(services, edges):
 	cluster = {}
 
 	assert type(services) is list
@@ -288,9 +288,6 @@ def make_cluster(services, edges, netLat):
 
 	assert type(edges) is list
 	cluster["edges"] = edges
-
-	assert type(netLat) is int
-	cluster["net_latency"] = netLat
 
 	return cluster
 
@@ -317,6 +314,35 @@ def make_machine(mid, name, cores, netSched):
 
 	return machine
 
+# def make_machine_links(mid, name, cores, threads, netSched):
+def make_machine_links(mid1, mid2, lat, cap):
+	link = {}
+	assert type(mid1) is int
+	link["machine_id_1"] = mid1
+	
+	assert type(mid2) is int
+	link["machine_id_2"] = mid2
+
+	assert type(lat) is int
+	link["latency"] = lat
+
+	assert type(cap) is int
+	link["capacity"] = cap
+
+	return link
+
+def make_machine_json(machines, links, cli_lat):
+	machine_json = {}
+	assert type(machines) is list
+	machine_json["machines"] = machines
+
+	assert type(links) is list
+	machine_json["links"] = links
+
+	assert type(cli_lat) is int
+	machine_json["client_latency"] = cli_lat
+
+	return machine_json
 
 # # # # # # # # # #
 # workload pattern

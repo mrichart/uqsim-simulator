@@ -1,5 +1,3 @@
-import sys
-import os
 import json
 import make_arch as march 
 

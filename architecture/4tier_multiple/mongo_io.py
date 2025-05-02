@@ -1,5 +1,3 @@
-import sys
-import os
 import json
 import make_arch as march 
 
@@ -11,8 +9,9 @@ def main():
 
 	cmodel = march.make_chunk_model("expo", [2])
 
+	#TODO: at some point I change chunk to False. Check if this is correct
 	proc_stage = march.make_stage(stage_name = "disk_io", pathId = 0, pathStageId = 0, stageId = 0, blocking = False, batching = False, socket = False, 
-		epoll = False, ngx = False, net = False, chunk = True, recvTm = recvTm, respTm = respTm, cm = cmodel, criSec = False, threadLimit = None,
+		epoll = False, ngx = False, net = False, chunk = False, recvTm = recvTm, respTm = respTm, cm = cmodel, criSec = False, threadLimit = None,
 		scaleFactor = 0.0)
 
 	path = march.make_code_path(pathId = 0, prob = 100, stages=[proc_stage], priority = None)
