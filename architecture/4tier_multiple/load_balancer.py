@@ -16,7 +16,7 @@ def main():
 
 
 	# load balancer
-	ldb = march.make_micro_service(servType = "load_balancer", servName = "load_balancer", bindConn = True, paths = [path],
+	ldb = march.make_micro_service(servType = "microserivce", servName = "load_balancer", bindConn = True, paths = [path],
 		baseFreq = 2600, curFreq = 2600)
 
 	with open("./json/microservice/load_balancer.json", "w+") as f:
