@@ -94,6 +94,11 @@ def generate_microservices():
         if proc.returncode == 0:
             print("mongo_io.py successfully executed")
 
+        # Call load_balancer.py
+        proc = subprocess.run(['python3', 'load_balancer.py'])
+        if proc.returncode == 0:
+            print("load_balancer.py successfully executed")
+
     except FileNotFoundError as e:
         print(e)
 
