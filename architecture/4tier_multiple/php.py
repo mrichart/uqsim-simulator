@@ -20,21 +20,21 @@ def main():
 	# fput, goes to mongo
 	recvTm = march.make_time_model("expo", [40000])
 	respTm = march.make_time_model("expo", [40000])
-	fput_stage = march.make_stage(stage_name = "php_fput", pathId = 0, pathStageId = 2, stageId = 2, blocking = True, batching = False, socket = False, 
+	fput_stage = march.make_stage(stage_name = "php_fput", pathId = 0, pathStageId = 2, stageId = 2, blocking = False, batching = False, socket = False, 
 		epoll = False, ngx = False, scaleFactor = 0.0,
 		net = True, chunk = False, recvTm = recvTm, respTm = respTm, cm = None, criSec = False, threadLimit = None)
 
 	# find done, goes to mongo
 	recvTm = march.make_time_model("expo", [40000])
 	respTm = march.make_time_model("expo", [40000])
-	find_done_stage = march.make_stage(stage_name = "php_find_done", pathId = 0, pathStageId = 3, stageId = 3, blocking = True, batching = False, socket = False, 
+	find_done_stage = march.make_stage(stage_name = "php_find_done", pathId = 0, pathStageId = 3, stageId = 3, blocking = False, batching = False, socket = False, 
 		epoll = False, ngx = False, scaleFactor = 0.0,
 		net = True, chunk = False, recvTm = recvTm, respTm = respTm, cm = None, criSec = False, threadLimit = None)
 
 	#get bytes, goes to memcached
 	recvTm = march.make_time_model("expo", [40000])
 	respTm = march.make_time_model("expo", [40000])
-	get_bytes_stage = march.make_stage(stage_name = "php_get_bytes", pathId = 0, pathStageId = 4, stageId = 4, blocking = True, batching = False, socket = False, 
+	get_bytes_stage = march.make_stage(stage_name = "php_get_bytes", pathId = 0, pathStageId = 4, stageId = 4, blocking = False, batching = False, socket = False, 
 		epoll = False, ngx = False, scaleFactor = 0.0,
 		net = True, chunk = False, recvTm = recvTm, respTm = respTm, cm = None, criSec = False, threadLimit = None)
 
