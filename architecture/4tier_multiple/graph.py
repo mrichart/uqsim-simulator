@@ -83,13 +83,14 @@ def main():
         services.append(php_io)
         cur_machine += 1
 
+    cur_machine = args.machBalancerMongo + args.phpInstances * 2 - 2
     # load balancer service for mongodb, only one instance one machine 
     sched = march.make_service_sched("CMT", [1, [30]], None)
     balance = march.make_serv_inst(servName = "load_balancer_mongo", servDomain = "", instName = "load_balancer_mongo",
-        modelName = "load_balancer", sched = sched, machId = args.machBalancerMongo)
+        modelName = "load_balancer", sched = sched, machId = cur_machine)
     services.append(balance)
 
-    cur_machine = args.machMongo
+    cur_machine += 1
 
     # mongodb service, multiple instances
     # it includes a mongodb_io service both deployed in the same machine

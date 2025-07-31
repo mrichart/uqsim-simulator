@@ -112,30 +112,30 @@ def generate_client(end_seconds, monitor_interval):
     except FileNotFoundError as e:
         print(e)
 
-def generate_machines(latency_nginx_mmc, latency_nginx_balancerPhp, latency_mmc_php, latency_balancerPhp_php, latency_php_phpIo, latency_php_balancerMongo, latency_balancerMongo_mongo, latency_mongo_mongoIo, latency_cli):
+def generate_machines(phpInstances, mongoInstances, latency_nginx_mmc, latency_nginx_balancerPhp, latency_mmc_php, latency_balancerPhp_php, latency_php_phpIo, latency_php_balancerMongo, latency_balancerMongo_mongo, latency_mongo_mongoIo, latency_cli):
     try:
         # Call machines.py
-        proc = subprocess.run(['python3', 'machines.py', f"--latency_nginx_mmc={latency_nginx_mmc}", f"--latency_nginx_balancerPhp={latency_nginx_balancerPhp}", f"--latency_mmc_php={latency_mmc_php}", f"--latency_balancerPhp_php={latency_balancerPhp_php}", f"--latency_php_phpIo={latency_php_phpIo}", f"--latency_php_balancerMongo={latency_php_balancerMongo}", f"--latency_balancerMongo_mongo={latency_balancerMongo_mongo}", f"--latency_mongo_mongoIo={latency_mongo_mongoIo}", f"--latency_cli={latency_cli}"])
+        proc = subprocess.run(['python3', 'machines.py', f"--phpInstances={phpInstances}", f"--mongoInstances={mongoInstances}", f"--latency_nginx_mmc={latency_nginx_mmc}", f"--latency_nginx_balancerPhp={latency_nginx_balancerPhp}", f"--latency_mmc_php={latency_mmc_php}", f"--latency_balancerPhp_php={latency_balancerPhp_php}", f"--latency_php_phpIo={latency_php_phpIo}", f"--latency_php_balancerMongo={latency_php_balancerMongo}", f"--latency_balancerMongo_mongo={latency_balancerMongo_mongo}", f"--latency_mongo_mongoIo={latency_mongo_mongoIo}", f"--latency_cli={latency_cli}"])
         if proc.returncode == 0:
             print("machines.py successfully executed")
 
     except FileNotFoundError as e:
         print(e)
 
-def generate_graph(ngxThreads, phpThreads, phpIOThreads, mmcThreads, mongoThreads, mongoIOThreads, ngxCores, phpCores, phpIOCores, mmcCores, mongoCores, mongoIOCores, machNxg, machBalancerPhp, machPhp, machPhpIO, machMmc, machBalancerMongo, machMongo, machMongoIO):
+def generate_graph(ngxThreads, phpThreads, phpIOThreads, mmcThreads, mongoThreads, mongoIOThreads, ngxCores, phpCores, phpIOCores, mmcCores, mongoCores, mongoIOCores, phpInstances, mongoInstances, machNxg, machBalancerPhp, machPhp, machPhpIO, machMmc, machBalancerMongo, machMongo, machMongoIO):
     try:
         # Call graph.py
-        proc = subprocess.run(['python3', 'graph.py', f"--ngxThreads={ngxThreads}", f"--phpThreads={phpThreads}", f"--phpIOThreads={phpIOThreads}", f"--mmcThreads={mmcThreads}", f"--mongoThreads={mongoThreads}", f"--mongoIOThreads={mongoIOThreads}", f"--ngxCores={ngxCores}", f"--phpCores={phpCores}", f"--phpIOCores={phpIOCores}", f"--mmcCores={mmcCores}", f"--mongoCores={mongoCores}", f"--mongoIOCores={mongoIOCores}", f"--machNxg={machNxg}", f"--machBalancerPhp={machBalancerPhp}", f"--machPhp={machPhp}", f"--machPhpIO={machPhpIO}", f"--machMmc={machMmc}", f"--machBalancerMongo={machBalancerMongo}", f"--machMongo={machMongo}", f"--machMongoIO={machMongoIO}"])
+        proc = subprocess.run(['python3', 'graph.py', f"--ngxThreads={ngxThreads}", f"--phpThreads={phpThreads}", f"--phpIOThreads={phpIOThreads}", f"--mmcThreads={mmcThreads}", f"--mongoThreads={mongoThreads}", f"--mongoIOThreads={mongoIOThreads}", f"--ngxCores={ngxCores}", f"--phpCores={phpCores}", f"--phpIOCores={phpIOCores}", f"--mmcCores={mmcCores}", f"--mongoCores={mongoCores}", f"--mongoIOCores={mongoIOCores}", f"--phpInstances={phpInstances}", f"--mongoInstances={mongoInstances}", f"--machNxg={machNxg}", f"--machBalancerPhp={machBalancerPhp}", f"--machPhp={machPhp}", f"--machPhpIO={machPhpIO}", f"--machMmc={machMmc}", f"--machBalancerMongo={machBalancerMongo}", f"--machMongo={machMongo}", f"--machMongoIO={machMongoIO}"])
         if proc.returncode == 0:
             print("graph.py successfully executed")
 
     except FileNotFoundError as e:
         print(e)
 
-def generate_path(pPath0, pPath1, pPath2):
+def generate_path(pPath0, pPath1, pPath2, phpInstances, mongoInstances):
     try:
         # Call path.py
-        proc = subprocess.run(['python3', 'path.py', f"--pPath0={pPath0}", f"--pPath1={pPath1}", f"--pPath2={pPath2}"])
+        proc = subprocess.run(['python3', 'path.py', f"--pPath0={pPath0}", f"--pPath1={pPath1}", f"--pPath2={pPath2}", f"--phpInstances={phpInstances}", f"--mongoInstances={mongoInstances}"])
         if proc.returncode == 0:
             print("path.py successfully executed")
 
@@ -147,9 +147,9 @@ def main():
     args = parse_arguments()
     generate_microservices()
     generate_client(args.end_seconds, args.monitor_interval)
-    generate_machines(args.latency_nginx_mmc, args.latency_nginx_balancerPhp, args.latency_mmc_php, args.latency_balancerPhp_php, args.latency_php_phpIo, args.latency_php_balancerMongo, args.latency_balancerMongo_mongo, args.latency_mongo_mongoIo, args.latency_cli)
-    generate_graph(args.ngxThreads, args.phpThreads, args.phpIOThreads, args.mmcThreads, args.mongoThreads, args.mongoIOThreads, args.ngxCores, args.phpCores, args.phpIOCores, args.mmcCores, args.mongoCores, args.mongoIOCores, args.machNxg, args.machBalancerPhp, args.machPhp, args.machPhpIO, args.machMmc, args.machBalancerMongo, args.machMongo, args.machMongoIO)
-    generate_path(args.pPath0, args.pPath1, args.pPath2)
+    generate_machines(args.phpInstances, args.mongoInstances, args.latency_nginx_mmc, args.latency_nginx_balancerPhp, args.latency_mmc_php, args.latency_balancerPhp_php, args.latency_php_phpIo, args.latency_php_balancerMongo, args.latency_balancerMongo_mongo, args.latency_mongo_mongoIo, args.latency_cli)
+    generate_graph(args.ngxThreads, args.phpThreads, args.phpIOThreads, args.mmcThreads, args.mongoThreads, args.mongoIOThreads, args.ngxCores, args.phpCores, args.phpIOCores, args.mmcCores, args.mongoCores, args.mongoIOCores, args.phpInstances, args.mongoInstances, args.machNxg, args.machBalancerPhp, args.machPhp, args.machPhpIO, args.machMmc, args.machBalancerMongo, args.machMongo, args.machMongoIO)
+    generate_path(args.pPath0, args.pPath1, args.pPath2, args.phpInstances, args.mongoInstances)
 
 if __name__ == "__main__":
     main()
