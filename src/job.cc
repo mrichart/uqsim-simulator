@@ -521,7 +521,20 @@ Job::leavePathNode(std::list<Job*>& sendL, std::list<Job*>& pendL, bool& servCom
 			if(pathNode->isTemp()) 
 				delete pathNode;
 
-			for(auto node: childs) {
+			if (pathNode->getServName().find("load_balancer") == std::string::npos) {
+				for(auto node: childs) {
+					Job* j = new Job(this);
+					j->pathNode = node;
+					j->newPathNode = true;
+					// only in chunk node we faked, a node that needs sync can have child in the same micro service
+					assert( !(node->getServName() == getServName() && node->getServDomain() == getServDomain() ) ); 
+					sendL.push_back(j);
+				}
+			} else {
+				// randomly select a child node
+				int pos = rand() % childs.size();
+				MicroServPathNode* node = childs[pos];
+				// create a new job for the selected child node
 				Job* j = new Job(this);
 				j->pathNode = node;
 				j->newPathNode = true;
@@ -537,7 +550,31 @@ Job::leavePathNode(std::list<Job*>& sendL, std::list<Job*>& pendL, bool& servCom
 		} else {
 			// whether there is a child in the same micro service
 			bool childSameServ = false;
-			for(auto node: childs) {
+			if (pathNode->getServName().find("load_balancer") == std::string::npos) {
+				for(auto node: childs) {
+					if(node->getServName() == getServName() && node->getServDomain() == getServDomain() ) {
+						// it makes no sense to enter the same micro service again immediately after finishing it 
+						assert(pathNode->getEndStg() != -1);
+						// can at most have one child in the same micro service
+						assert(!childSameServ);
+
+						childSameServ = true;
+						updateRecord(node);
+						this->pathNode = node;
+						this->newPathNode = true;
+						this->del = false;
+						pendL.push_back(this);
+					} else {
+						Job* j = new Job(this);
+						j->pathNode = node;
+						j->newPathNode = true;
+						sendL.push_back(j);
+					}
+				}
+			} else {
+				// randomly select a child node
+				int pos = rand() % childs.size();
+				MicroServPathNode* node = childs[pos];
 				if(node->getServName() == getServName() && node->getServDomain() == getServDomain() ) {
 					// it makes no sense to enter the same micro service again immediately after finishing it 
 					assert(pathNode->getEndStg() != -1);
