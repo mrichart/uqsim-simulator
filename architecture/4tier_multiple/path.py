@@ -68,29 +68,29 @@ def main():
 		cur_node = base_node + i - 1
 		# php_fcgi_req
 		# its child is php_io and syncs with next php instance (fopen)
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 0, endStage = 0,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 0, endStage = 0,
 			nodeId = cur_node, needSync = True, syncNodeId = cur_node + 2*args.phpInstances, childs = [cur_node + args.phpInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.phpInstances
-		node = march.make_serv_path_node(servName = "php_io", servDomain =  str(i - 1), codePath = 0, startStage = 0, endStage = -1,
+		node = march.make_serv_path_node(servName = "php_io", servDomain = "", codePath = 0, startStage = 0, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.phpInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.phpInstances
 
 		# php_fopen
 		# its child is php_io and syncs with next php instance (fput)
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 0, endStage = 1,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 0, endStage = 1,
 			nodeId = cur_node, needSync = True, syncNodeId = cur_node + 2*args.phpInstances, childs = [cur_node + args.phpInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.phpInstances
-		node = march.make_serv_path_node(servName = "php_io", servDomain = str(i - 1), codePath = 1, startStage = 0, endStage = -1,
+		node = march.make_serv_path_node(servName = "php_io", servDomain = "", codePath = 1, startStage = 0, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.phpInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.phpInstances
 
 		# php_fput
 		# its child is load balancer for mongodb and syncs with next php instance (find_done)
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 1, endStage = 2,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 1, endStage = 2,
 			nodeId = cur_node, needSync = True, syncNodeId = cur_node + args.phpInstances + args.mongoInstances + 2, childs = [cur_node + args.phpInstances - i + 1])
 		nodeList.append(node)
 
@@ -106,7 +106,7 @@ def main():
 	# mongodb instances (hit)
 	# its child is the load balancer
 	for i in range(1, args.mongoInstances + 1):
-		node = march.make_serv_path_node(servName = "mongodb", servDomain =  str(i - 1), codePath = 0, startStage = 0, endStage = -1,
+		node = march.make_serv_path_node(servName = "mongodb", servDomain = "", codePath = 0, startStage = 0, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.mongoInstances - i + 1])
 		nodeList.append(node)
 		cur_node = cur_node + 1
@@ -121,7 +121,7 @@ def main():
 	for i in range(1, args.phpInstances + 1):
 		# php_find_done
 		# its child is load balancer for mongo and syncs with next php instance (get_bytes)
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 2, endStage = 3,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 2, endStage = 3,
 			nodeId = cur_node, needSync = True, syncNodeId = cur_node + args.phpInstances + args.mongoInstances + 2, childs = [cur_node + args.phpInstances - i + 1])
 		nodeList.append(node)
 		cur_node = cur_node + 1
@@ -136,7 +136,7 @@ def main():
 	# mongodb instances (hit)
 	# its child is the load balancer for mongo
 	for i in range(1, args.mongoInstances + 1):
-		node = march.make_serv_path_node(servName ="mongodb", servDomain =  str(i - 1), codePath = 0, startStage = 0, endStage = -1,
+		node = march.make_serv_path_node(servName ="mongodb", servDomain = "", codePath = 0, startStage = 0, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.mongoInstances - i + 1])
 		nodeList.append(node)
 		cur_node = cur_node + 1
@@ -154,7 +154,7 @@ def main():
 	for i in range(1, args.phpInstances + 1):
 		# php_get_bytes
 		cur_node = base_node + i - 1
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 3, endStage = 4,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 3, endStage = 4,
 			nodeId = cur_node, needSync = True, syncNodeId = cur_node + 2*args.phpInstances, childs = [cur_node + args.phpInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.phpInstances
@@ -167,7 +167,7 @@ def main():
 
 		# php_mmc_store
 		# its child is php load balancer
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 4, endStage = -1,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 4, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.phpInstances - i + 1])
 		nodeList.append(node)
 
@@ -215,29 +215,29 @@ def main():
 		cur_node = base_node + i - 1
 		# php_fcgi_req
 		# its child is php_io and syncs with next php instance (fopen)
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 0, endStage = 0,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 0, endStage = 0,
 			nodeId = cur_node, needSync = True, syncNodeId = cur_node + 2*args.phpInstances, childs = [cur_node + args.phpInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.phpInstances
-		node = march.make_serv_path_node(servName = "php_io", servDomain = str(i - 1), codePath = 0, startStage = 0, endStage = -1,
+		node = march.make_serv_path_node(servName = "php_io", servDomain = "", codePath = 0, startStage = 0, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.phpInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.phpInstances
 
 		# php_fopen
 		# its child is php_io and syncs with next php instance (fput)
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 0, endStage = 1,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 0, endStage = 1,
 			nodeId = cur_node, needSync = True, syncNodeId = cur_node + 2*args.phpInstances, childs = [cur_node + args.phpInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.phpInstances
-		node = march.make_serv_path_node(servName = "php_io", servDomain = str(i - 1), codePath = 1, startStage = 0, endStage = -1,
+		node = march.make_serv_path_node(servName = "php_io", servDomain = "", codePath = 1, startStage = 0, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.phpInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.phpInstances
 
 		# php_fput
 		# its child is load balancer for mongodb and syncs with next php instance (find_done)
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 1, endStage = 2,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 1, endStage = 2,
 			nodeId = cur_node, needSync = True, syncNodeId = cur_node + args.phpInstances + 3*args.mongoInstances + 2, childs = [cur_node + args.phpInstances - i + 1])
 		nodeList.append(node)
 
@@ -255,17 +255,17 @@ def main():
 	base_node = cur_node
 	for i in range(1, args.mongoInstances + 1):
 		cur_node = base_node + i - 1
-		node = march.make_serv_path_node(servName ="mongodb", servDomain =  str(i - 1), codePath = 0, startStage = 0, endStage = -1,
+		node = march.make_serv_path_node(servName ="mongodb", servDomain = "", codePath = 0, startStage = 0, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.mongoInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.mongoInstances
 
-		node = march.make_serv_path_node(servName = "mongo_io", servDomain = str(i - 1), codePath = 0, startStage = 0, endStage = -1,
+		node = march.make_serv_path_node(servName = "mongo_io", servDomain = "", codePath = 0, startStage = 0, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.mongoInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.mongoInstances
 
-		node = march.make_serv_path_node(servName = "mongodb", servDomain =  str(i - 1), codePath = 1, startStage = 1, endStage = -1,
+		node = march.make_serv_path_node(servName = "mongodb", servDomain = "", codePath = 1, startStage = 1, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.mongoInstances - i + 1])
 		nodeList.append(node)
 
@@ -281,7 +281,7 @@ def main():
 	for i in range(1, args.phpInstances + 1):
 		# php_find_done
 		# its child is load balancer for mongo and syncs with next php instance (get_bytes)
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 2, endStage = 3,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 2, endStage = 3,
 			nodeId = cur_node, needSync = True, syncNodeId = cur_node + args.phpInstances + args.mongoInstances + 2, childs = [cur_node + args.phpInstances - i + 1])
 		nodeList.append(node)
 		cur_node = cur_node + 1
@@ -296,7 +296,7 @@ def main():
 	# mongodb instances (miss)
 	# its child is the load balancer for mongo
 	for i in range(1, args.mongoInstances + 1):
-		node = march.make_serv_path_node(servName = "mongodb", servDomain =  str(i - 1), codePath = 1, startStage = 0, endStage = -1,
+		node = march.make_serv_path_node(servName = "mongodb", servDomain = "", codePath = 1, startStage = 0, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.mongoInstances - i + 1])
 		nodeList.append(node)
 		cur_node = cur_node + 1
@@ -314,7 +314,7 @@ def main():
 	for i in range(1, args.phpInstances + 1):
 		# php_get_bytes
 		cur_node = base_node + i - 1
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 3, endStage = 4,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 3, endStage = 4,
 			nodeId = cur_node, needSync = True, syncNodeId = cur_node + 2*args.phpInstances, childs = [cur_node + args.phpInstances])
 		nodeList.append(node)
 		cur_node = cur_node + args.phpInstances
@@ -327,7 +327,7 @@ def main():
 
 		# php_mmc_store
 		# its child is php load balancer
-		node = march.make_serv_path_node(servName = "php", servDomain = str(i - 1), codePath = 0, startStage = 4, endStage = -1,
+		node = march.make_serv_path_node(servName = "php", servDomain = "", codePath = 0, startStage = 4, endStage = -1,
 			nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + args.phpInstances - i + 1])
 		nodeList.append(node)
 

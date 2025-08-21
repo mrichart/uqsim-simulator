@@ -68,7 +68,7 @@ def main():
     for i in range(1, args.phpInstances + 1):
         sched_php = march.make_service_sched("CMT", [args.phpThreads, list(range(30, 30 + args.phpCores))], None)
         serv_name = "php"
-        serv_domain = str(i - 1)
+        serv_domain = ""
         inst_name = serv_name + "_inst_" + str(i - 1)
         php = march.make_serv_inst(servName = serv_name, servDomain = serv_domain, instName = inst_name,
             modelName = "php", sched = sched_php, machId = cur_machine)
@@ -76,7 +76,7 @@ def main():
 
         sched_php_io = march.make_service_sched("Simplified", [args.phpIOThreads, list(range(30, 30 + args.phpIOCores))], None)
         serv_name = "php_io"
-        serv_domain = str(i - 1)
+        serv_domain = ""
         inst_name = serv_name + "_inst_" + str(i - 1)
         php_io = march.make_serv_inst(servName = serv_name, servDomain = serv_domain, instName = inst_name,
             modelName = "php_io", sched = sched_php_io, machId = cur_machine + args.phpInstances)
@@ -97,7 +97,7 @@ def main():
     for i in range(1, args.mongoInstances + 1):
         sched_mongo = march.make_service_sched("CMT", [args.mongoThreads, list(range(30, 30 + args.mongoCores))], None)
         serv_name = "mongodb"
-        serv_domain = str(i - 1)
+        serv_domain = ""
         inst_name = serv_name + "_inst_" + str(i - 1)
         mongodb = march.make_serv_inst(servName = serv_name, servDomain = serv_domain, instName = inst_name, 
             modelName = "mongodb", sched = sched_mongo, machId = cur_machine)
@@ -105,7 +105,7 @@ def main():
         
         sched_mongo_io = march.make_service_sched("Simplified", [args.mongoIOThreads, list(range(30, 30 + args.mongoIOCores))], None)
         serv_name = "mongo_io"
-        serv_domain = str(i - 1)
+        serv_domain = ""
         inst_name = serv_name + "_inst_" + str(i - 1)
         mongodb_io = march.make_serv_inst(servName = serv_name, servDomain = serv_domain, instName = inst_name,
         modelName = "mongo_io", sched = sched_mongo_io, machId = cur_machine + args.mongoInstances)

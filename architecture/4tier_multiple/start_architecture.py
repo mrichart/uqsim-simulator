@@ -132,10 +132,10 @@ def generate_graph(ngxThreads, phpThreads, phpIOThreads, mmcThreads, mongoThread
     except FileNotFoundError as e:
         print(e)
 
-def generate_path(pPath0, pPath1, pPath2, phpInstances, mongoInstances):
+def generate_path(pPath0, pPath1, pPath2):
     try:
         # Call path.py
-        proc = subprocess.run(['python3', 'path.py', f"--pPath0={pPath0}", f"--pPath1={pPath1}", f"--pPath2={pPath2}", f"--phpInstances={phpInstances}", f"--mongoInstances={mongoInstances}"])
+        proc = subprocess.run(['python3', 'path.py', f"--pPath0={pPath0}", f"--pPath1={pPath1}", f"--pPath2={pPath2}"])
         if proc.returncode == 0:
             print("path.py successfully executed")
 
@@ -149,7 +149,7 @@ def main():
     generate_client(args.end_seconds, args.monitor_interval)
     generate_machines(args.phpInstances, args.mongoInstances, args.latency_nginx_mmc, args.latency_nginx_balancerPhp, args.latency_mmc_php, args.latency_balancerPhp_php, args.latency_php_phpIo, args.latency_php_balancerMongo, args.latency_balancerMongo_mongo, args.latency_mongo_mongoIo, args.latency_cli)
     generate_graph(args.ngxThreads, args.phpThreads, args.phpIOThreads, args.mmcThreads, args.mongoThreads, args.mongoIOThreads, args.ngxCores, args.phpCores, args.phpIOCores, args.mmcCores, args.mongoCores, args.mongoIOCores, args.phpInstances, args.mongoInstances, args.machNxg, args.machBalancerPhp, args.machPhp, args.machPhpIO, args.machMmc, args.machBalancerMongo, args.machMongo, args.machMongoIO)
-    generate_path(args.pPath0, args.pPath1, args.pPath2, args.phpInstances, args.mongoInstances)
+    generate_path(args.pPath0, args.pPath1, args.pPath2)
 
 if __name__ == "__main__":
     main()
