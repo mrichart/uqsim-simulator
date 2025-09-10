@@ -121,7 +121,7 @@ Cluster::enqueue(Job* j) {
 	// select a path for this job
 	unsigned prob = rand() % 100;
 	unsigned i = 0;
-	while(pathDistr[i] < prob)
+	while(pathDistr[i] <= prob)
 		++i;
 	j->setPathNode(paths[i].getEntry());
 	j->pathId = i;
