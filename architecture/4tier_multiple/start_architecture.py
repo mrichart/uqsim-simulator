@@ -61,43 +61,43 @@ def generate_microservices():
     try:
         #Call net_stack.py
         proc = subprocess.run(['python3', 'net_stack.py'])
-        if proc.returncode == 0:
-            print("net_stack.py successfully executed")
+        #if proc.returncode == 0:
+            #print("net_stack.py successfully executed")
 
         # Call nginx.py
         proc = subprocess.run(['python3', 'nginx.py'])
-        if proc.returncode == 0:
-            print("nginx.py successfully executed")
+        #if proc.returncode == 0:
+            #print("nginx.py successfully executed")
 
         # Call memcached.py
         proc = subprocess.run(['python3', 'memcached.py'])
-        if proc.returncode == 0:
-            print("memcached.py successfully executed")
+        #if proc.returncode == 0:
+            #print("memcached.py successfully executed")
 
         # Call php.py
         proc = subprocess.run(['python3', 'php.py'])
-        if proc.returncode == 0:
-            print("php.py successfully executed")
+        #if proc.returncode == 0:
+            #print("php.py successfully executed")
 
         # Call php_io.py
         proc = subprocess.run(['python3', 'php_io.py'])
-        if proc.returncode == 0:
-            print("php_io.py successfully executed")
+        #if proc.returncode == 0:
+            #print("php_io.py successfully executed")
 
         # Call mongodb.py
         proc = subprocess.run(['python3', 'mongodb.py'])
-        if proc.returncode == 0:
-            print("mongodb.py successfully executed")
+        #if proc.returncode == 0:
+            #print("mongodb.py successfully executed")
 
         # Call mongo_io.py
         proc = subprocess.run(['python3', 'mongo_io.py'])
-        if proc.returncode == 0:
-            print("mongo_io.py successfully executed")
+        #if proc.returncode == 0:
+            #print("mongo_io.py successfully executed")
 
         # Call load_balancer.py
         proc = subprocess.run(['python3', 'load_balancer.py'])
-        if proc.returncode == 0:
-            print("load_balancer.py successfully executed")
+        #if proc.returncode == 0:
+            #print("load_balancer.py successfully executed")
 
     except FileNotFoundError as e:
         print(e)
@@ -106,8 +106,8 @@ def generate_client(end_seconds, monitor_interval):
     try:
         # Call client.py
         proc = subprocess.run(['python3', 'client.py', f"--end_seconds={end_seconds}", f"--monitor_interval={monitor_interval}"])
-        if proc.returncode == 0:
-            print("client.py successfully executed")
+        #if proc.returncode == 0:
+            #print("client.py successfully executed")
 
     except FileNotFoundError as e:
         print(e)
@@ -116,8 +116,8 @@ def generate_machines(phpInstances, mongoInstances, latency_nginx_mmc, latency_n
     try:
         # Call machines.py
         proc = subprocess.run(['python3', 'machines.py', f"--phpInstances={phpInstances}", f"--mongoInstances={mongoInstances}", f"--latency_nginx_mmc={latency_nginx_mmc}", f"--latency_nginx_balancerPhp={latency_nginx_balancerPhp}", f"--latency_mmc_php={latency_mmc_php}", f"--latency_balancerPhp_php={latency_balancerPhp_php}", f"--latency_php_phpIo={latency_php_phpIo}", f"--latency_php_balancerMongo={latency_php_balancerMongo}", f"--latency_balancerMongo_mongo={latency_balancerMongo_mongo}", f"--latency_mongo_mongoIo={latency_mongo_mongoIo}", f"--latency_cli={latency_cli}"])
-        if proc.returncode == 0:
-            print("machines.py successfully executed")
+        #if proc.returncode == 0:
+            #print("machines.py successfully executed")
 
     except FileNotFoundError as e:
         print(e)
@@ -126,8 +126,8 @@ def generate_graph(ngxThreads, phpThreads, phpIOThreads, mmcThreads, mongoThread
     try:
         # Call graph.py
         proc = subprocess.run(['python3', 'graph.py', f"--ngxThreads={ngxThreads}", f"--phpThreads={phpThreads}", f"--phpIOThreads={phpIOThreads}", f"--mmcThreads={mmcThreads}", f"--mongoThreads={mongoThreads}", f"--mongoIOThreads={mongoIOThreads}", f"--ngxCores={ngxCores}", f"--phpCores={phpCores}", f"--phpIOCores={phpIOCores}", f"--mmcCores={mmcCores}", f"--mongoCores={mongoCores}", f"--mongoIOCores={mongoIOCores}", f"--phpInstances={phpInstances}", f"--mongoInstances={mongoInstances}", f"--machNxg={machNxg}", f"--machBalancerPhp={machBalancerPhp}", f"--machPhp={machPhp}", f"--machPhpIO={machPhpIO}", f"--machMmc={machMmc}", f"--machBalancerMongo={machBalancerMongo}", f"--machMongo={machMongo}", f"--machMongoIO={machMongoIO}"])
-        if proc.returncode == 0:
-            print("graph.py successfully executed")
+        #if proc.returncode == 0:
+            #print("graph.py successfully executed")
 
     except FileNotFoundError as e:
         print(e)
@@ -136,8 +136,8 @@ def generate_path(pPath0, pPath1, pPath2):
     try:
         # Call path.py
         proc = subprocess.run(['python3', 'path.py', f"--pPath0={pPath0}", f"--pPath1={pPath1}", f"--pPath2={pPath2}"])
-        if proc.returncode == 0:
-            print("path.py successfully executed")
+        #if proc.returncode == 0:
+            #print("path.py successfully executed")
 
     except FileNotFoundError as e:
         print(e)
