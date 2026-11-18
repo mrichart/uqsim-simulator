@@ -339,12 +339,12 @@ def main():
 	nodeList.append(node)
 	cur_node = cur_node + 1
 
-	node = march.make_serv_path_node(servName = "nginx", servDomain = "", codePath = 1, startStage = 0, endStage = -1,
+	node = march.make_serv_path_node(servName = "nginx", servDomain = "", codePath = 1, startStage = 6, endStage = -1,
 		nodeId = cur_node, needSync = False, syncNodeId = None, childs = [cur_node + 1])
 	nodeList.append(node)
 	cur_node = cur_node + 1
 
-	node = march.make_serv_path_node(servName = "client", servDomain = "", codePath = -1, startStage = 0, endStage = -1, 
+	node = march.make_serv_path_node(servName = "client", servDomain = "", codePath = -1, startStage = 0, endStage = -1,
 		nodeId = cur_node, needSync = False, syncNodeId = None, childs = [])
 	nodeList.append(node)
 
