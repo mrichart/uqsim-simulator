@@ -11,7 +11,13 @@ import os
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Generate a service graph with input arguments')
     parser.add_argument('--end_seconds', type=int, default=60, help='Epoch end time in seconds')
-    parser.add_argument('--monitor_interval', type=int, default=1, help='Interval at which the client will monitor the system (in seconds)')
+    # 2026-11-20: default changed 1 -> 0 (see client.py's note) - with
+    # periodic clearing enabled, the final "total:" summary line only
+    # aggregates the tiny leftover fragment since the last clear, which
+    # made it a noisy, occasionally wildly misleading statistic (traced
+    # empirically while investigating apparent latency "instability" that
+    # turned out to be this reporting artifact, not a real capacity issue).
+    parser.add_argument('--monitor_interval', type=int, default=0, help='Interval at which the client will monitor the system (in seconds); 0 disables periodic monitoring')
 
     parser.add_argument('--mongoInstances', type=int, default=1, help='Number of mongodb instances')
 
@@ -38,7 +44,8 @@ def generate_microservices():
 
 def generate_client(end_seconds, monitor_interval):
     try:
-        proc = subprocess.run(['python3', 'client.py'])
+        proc = subprocess.run(['python3', 'client.py',
+            f"--end_seconds={end_seconds}", f"--monitor_interval={monitor_interval}"])
         if proc.returncode == 0:
             print("client.py successfully executed")
     except FileNotFoundError as e:
