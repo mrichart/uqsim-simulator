@@ -11,7 +11,7 @@ def make_chunk_model(kind, params):
 		cm["type"] = kind
 		cm["number"] = params[0]
 	else:
-		print "invalid chunk model type"
+		print("invalid chunk model type")
 		exit(1)
 
 	return cm
@@ -26,7 +26,7 @@ def make_time_model(kind, params):
 		tm["type"] = kind
 		tm["latency"] = params[0]
 	else:
-		print "invalid scheduler type"
+		print("invalid scheduler type")
 		exit(1)
 
 	return tm
@@ -150,7 +150,7 @@ def make_service_sched(kind, params, coreAffinity):
 			sched["core_affinity"] = coreAffinity
 
 	else:
-		print "Invalid scheduler type"
+		print("Invalid scheduler type")
 		exit(1)
 
 	return sched
